@@ -138,3 +138,6 @@ data/*
 data_predictions/
 data_predictions
 data_predictions/*
+fitted_models
+fitted_models/*
+fitted_models/
