@@ -132,3 +132,9 @@ dmypy.json
 data
 data/
 data/*
+.idea/
+.idea/*
+.idea
+data_predictions/
+data_predictions
+data_predictions/*
