@@ -4,18 +4,18 @@ import numpy as np
 import cv2
 from tqdm import tqdm
 from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, TRAIN_PATH, TEST_PATH, CHANNEL_NUM, TEST_PATH_IMAGES, \
-    TRAIN_PATH_IMAGES_LABELS
+    TRAIN_PATH_IMAGES_LABELS, VALIDATION_PATH_IMAGES_LABELS, VALIDATION_SIZE, RANDOM_STATE
 from preprocessing.utils import get_class_names
+from sklearn.model_selection import train_test_split
 
 
-def _create_training_data(path: str, classes: bidict[int, str]) -> (np.ndarray, np.ndarray):
+def _create_training_data(path: str, classes: bidict[int, str]) -> (list[str], np.ndarray):
     """
     Creates the training data arrays.
 
     :param path: training dataset path.
     :param classes: class bidirectional dictionary.
-    :return: a numpy array with shape (dataset_size, IMG_HEIGHT, IMG_WIDTH, channels) representing the images of the
-        train set and a numpy integer array with shape (dataset_size, ) representing the labels.
+    :return: a list containing the filenames and a numpy array containing the corresponding labels.
     """
     images = []
     labels = []
@@ -29,14 +29,12 @@ def _create_training_data(path: str, classes: bidict[int, str]) -> (np.ndarray, 
         # For each image
         for img in tqdm(os.listdir(class_path), desc=desc):
 
-            # Read, resize and append the image to the training set lists
-            img_array = cv2.imread(os.path.join(class_path, img))
-            new_array = cv2.resize(img_array, (IMG_HEIGHT, IMG_WIDTH))
-            images.append(new_array)
+            images.append(os.path.join(class_path, img))
+
+            # Insert the image label into the corresponding list
             labels.append(class_num)
 
     # Convert lists into numpy arrays
-    images = np.reshape(np.array(images), (len(images), IMG_HEIGHT, IMG_WIDTH, CHANNEL_NUM))
     labels = np.array(labels, dtype=int)
 
     return images, labels
@@ -57,7 +55,7 @@ def _create_test_data(path: str) -> np.ndarray:
 
         # Read, resize and append the image to the training set lists
         img_array = cv2.imread(os.path.join(path, img))
-        new_array = cv2.resize(img_array, (IMG_HEIGHT, IMG_WIDTH))
+        new_array = cv2.resize(img_array, (IMG_WIDTH, IMG_HEIGHT))
         images.append(new_array)
 
     # Convert lists into numpy arrays
@@ -74,8 +72,18 @@ def main():
     images, labels = _create_training_data(TRAIN_PATH, class_names)
     test_images = _create_test_data(TEST_PATH)
 
+    # Split in train/validation
+    train_images, val_images, train_labels, val_labels = train_test_split(
+        images,
+        labels,
+        test_size=VALIDATION_SIZE,
+        shuffle=True,
+        random_state=RANDOM_STATE
+    )
+
     # Store train/test arrays and labels to npz file
-    np.savez(file=TRAIN_PATH_IMAGES_LABELS, images=images, labels=labels)
+    np.savez(file=TRAIN_PATH_IMAGES_LABELS, images=train_images, labels=train_labels)
+    np.savez(file=VALIDATION_PATH_IMAGES_LABELS, images=val_images, labels=val_labels)
     np.save(file=TEST_PATH_IMAGES, arr=test_images)
 
 

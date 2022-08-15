@@ -29,3 +29,20 @@ def get_class_names(dataset_path: str) -> bidict[int, str]:
         return class_names_dict
     else:
         raise ValueError("dataset_path must be a directory")
+
+
+def n_images(path: str, classes: bidict[int, str]) -> int:
+    """
+    Gets the total number of the images in the given path with the given classes.
+
+    :param path: dataset path.
+    :param classes: class bidirectional dictionary.
+    :return: an integer indicating the total number of images in the given path having the given classes.
+    """
+    count = 0
+    for class_num in classes:
+        # Get the full class folder path
+        class_path = os.path.join(path, classes[class_num])
+        count += len(os.listdir(class_path))
+
+    return count
