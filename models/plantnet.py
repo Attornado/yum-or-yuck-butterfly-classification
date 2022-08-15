@@ -139,11 +139,11 @@ class PlantNet(Functional):
             conv_block.append(conv_dropout_layer)
 
         # Add pooling layer if required
-        if self._conv_pools[index] is not None:
+        if self.__pool_sizes[index] is not None:
             pool_layer = None
-            if self._pool_type == AVG_POOL:
+            if self.__pool_types[index] == AVG_POOL:
                 pool_layer = AvgPool2D(self.__pool_sizes[index], strides=self.__pool_strides[index], padding='same')
-            elif self._pool_type == MAX_POOL:
+            elif self.__pool_types[index] == MAX_POOL:
                 pool_layer = MaxPool2D(self.__pool_sizes[index], strides=self.__pool_strides[index], padding='same')
             output_shape = pool_layer.compute_output_shape(output_shape)
             conv_block.append(pool_layer)
