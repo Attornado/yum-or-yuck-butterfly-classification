@@ -158,8 +158,34 @@ class PlantNet(Functional):
 
         :return: a list containing the dense blocks of the network.
         """
-        # TODO: implement this
-        pass
+        dense_blocks = []
+        output_shape = conv_output_shape
+
+        # Add flatten layer
+        flatten = Flatten()
+        dense_blocks.append(flatten)
+        output_shape = flatten.compute_output_shape(output_shape)
+
+        # Add dense blocks
+        for index in range(0, len(self.__dense_dims)):
+            dense = Dense(
+                units=self.__dense_dims[index],
+                activation=self.__dense_activations[index],
+                kernel_regularizer=self.__dense_kernel_regularizers[index],
+                bias_regularizer=self.__dense_bias_regularizers[index],
+                activity_regularizer=self.__dense_activity_regularizers[index],
+                name=f"dense_layer{index}"
+            )
+            dense_blocks.append(dense)
+            output_shape = dense.compute_output_shape(output_shape)
+
+            # Add dropout layer if required (except in the last layer)
+            if self.__dropout_dense != 0 and index != len(self.__dense_dims) - 1:
+                dropout = Dropout(rate=self.__dropout_dense)
+                dense_blocks.append(dropout)
+                output_shape = dropout.compute_output_shape(output_shape)
+
+        return dense_blocks
 
     @property
     def filters(self) -> list[int]:
