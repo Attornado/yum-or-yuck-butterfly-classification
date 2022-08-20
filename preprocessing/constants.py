@@ -21,8 +21,8 @@ TEST_PATH_IMAGES: final = TEST_PATH_CLEANED + "/test_images.npy"
 
 # Image-related constants
 CHANNEL_NUM: final = 3
-IMG_HEIGHT: final = 640
-IMG_WIDTH: final = 480
+IMG_HEIGHT: final = 256
+IMG_WIDTH: final = 256
 NORMALIZATION_CONSTANT: final = 255.0
 
 # Splitting-related constants
