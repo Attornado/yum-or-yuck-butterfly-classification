@@ -8,7 +8,7 @@ from tensorflow.keras.regularizers import l1
 from tensorflow.keras.metrics import SparseCategoricalAccuracy
 from tensorflow.keras.models import load_model
 from models.plantnet import PlantNet
-from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, CHANNEL_NUM, TRAIN_PATH_IMAGES_LABELS, \
+from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, CHANNELS, TRAIN_PATH_IMAGES_LABELS, \
     VALIDATION_PATH_IMAGES_LABELS, NORMALIZATION_CONSTANT
 from training.utils import ImageGenerator
 from training.constants import FITTED_PLANTNET_DIR, PLOT_DIR
@@ -26,7 +26,7 @@ def main():
     x_val, y_val = val["images"], val["labels"]
 
     # Define model parameters
-    input_shape = (None, IMG_HEIGHT, IMG_WIDTH, CHANNEL_NUM)
+    input_shape = (None, IMG_HEIGHT, IMG_WIDTH, CHANNELS)
     filters = [32, 64, 64]
     kernel_sizes = [(3, 3), (3, 3), (3, 3)]
     conv_activations = ["relu", "relu", "relu"]

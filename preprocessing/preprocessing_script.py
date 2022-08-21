@@ -3,7 +3,7 @@ from bidict import bidict
 import numpy as np
 import cv2
 from tqdm import tqdm
-from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, TRAIN_PATH, TEST_PATH, CHANNEL_NUM, TEST_PATH_IMAGES, \
+from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, TRAIN_PATH, TEST_PATH, CHANNELS, TEST_PATH_IMAGES, \
     TRAIN_PATH_IMAGES_LABELS, VALIDATION_PATH_IMAGES_LABELS, VALIDATION_SIZE, RANDOM_STATE
 from preprocessing.utils import get_class_names
 from sklearn.model_selection import train_test_split
@@ -59,7 +59,7 @@ def _create_test_data(path: str) -> np.ndarray:
         images.append(new_array)
 
     # Convert lists into numpy arrays
-    images = np.reshape(np.array(images), (len(images), IMG_HEIGHT, IMG_WIDTH, CHANNEL_NUM))
+    images = np.reshape(np.array(images), (len(images), IMG_HEIGHT, IMG_WIDTH, CHANNELS))
 
     return images
 
