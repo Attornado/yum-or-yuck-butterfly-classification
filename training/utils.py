@@ -2,7 +2,7 @@ import tensorflow as tf
 from typing import Optional
 import numpy as np
 import cv2
-from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, CHANNEL_NUM
+from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, CHANNELS
 from tensorflow.keras.utils import Sequence
 # from tensorflow.python.keras.utils.data_utils import Sequence
 

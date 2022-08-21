@@ -1,5 +1,7 @@
 import os
 from bidict import bidict
+import tensorflow as tf
+from preprocessing.constants import NAME_TASTES, CLASS_NAMES
 
 
 def get_class_names(dataset_path: str) -> bidict[int, str]:
@@ -46,3 +48,55 @@ def n_images(path: str, classes: bidict[int, str]) -> int:
         count += len(os.listdir(class_path))
 
     return count
+
+
+def decode_image(image):
+    # image.shape == tf.TensorShape([IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_DEPTH])
+    return tf.keras.utils.array_to_img(image.numpy())
+
+
+def decode_label(label):
+    """
+    :param label: label to decode.
+
+    :return decoded label.
+    """
+    # label.shape == tf.TensorShape([class_count])
+    return CLASS_NAMES[tf.argmax(label)].numpy().decode('UTF-8')
+
+
+def decode_image_id(image_id):
+    """
+    Decodes the image id.
+
+    :param image_id: encoded image id.
+
+    :return decoded image id.
+    """
+    # image_id.shape == tf.TensorShape([1])
+    return image_id.numpy()[0].decode('UTF-8')
+
+
+def get_error_type(name: str, predicted_name: str):
+    """
+    Gets the error type string, either 'TP' (true positive), 'TN' (true negative), 'FP' (false positive) or 'FN' (false
+    negative), comparing the real label with the predicted one according to the 'yum' / 'yuck' mapping.
+
+    :param name: real label.
+    :param predicted_name: predicted label.
+
+    :return 'TP' if both real and predicted label are a 'yum', 'TN' if both are a 'yuck', 'FP' if real label is a 'yuck'
+    and predicted label is a 'yum', and 'FN' if real label is a 'yum' and predicted label is a 'yuck'.
+    """
+    if NAME_TASTES[name] == 'yum' and NAME_TASTES[predicted_name] == 'yum':
+        error_string = 'TP'
+    elif NAME_TASTES[name] == 'yum' and NAME_TASTES[predicted_name] == 'yuck':
+        error_string = 'FN'
+    elif NAME_TASTES[name] == 'yuck' and NAME_TASTES[predicted_name] == 'yum':
+        error_string = 'FP'
+    elif NAME_TASTES[name] == 'yuck' and NAME_TASTES[predicted_name] == 'yuck':
+        error_string = 'TN'
+    else:
+        error_string = ''
+
+    return error_string
