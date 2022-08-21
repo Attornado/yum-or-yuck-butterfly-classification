@@ -1,15 +1,14 @@
 from typing import Optional, final
 import tensorflow as tf
-from tensorflow.python.keras.models import Sequential, Functional
-from tensorflow.python.keras.layers import Conv2D, MaxPool2D, AvgPool2D, Dense, Dropout, Flatten
-from tensorflow.python.layers.normalization import BatchNormalization
+from tensorflow.keras.layers import BatchNormalization, Conv2D, MaxPool2D, AvgPool2D, Dense, Dropout, Flatten
+from tensorflow.keras.models import Sequential
 
 
 AVG_POOL: final = "AVG"
 MAX_POOL: final = "MAX"
 
 
-class PlantNet(Functional):
+class PlantNet(Sequential):
     """
     This class represents a generic 2D convolutional model for image-based plant disease classification, with an
     AlexNet-like architecture.
@@ -90,11 +89,15 @@ class PlantNet(Functional):
         self.__dense_bias_regularizers = dense_bias_regularizers
         self.__dense_activity_regularizers = dense_activity_regularizers
 
-        # Build convolutional blocks
+        # Build convolutional blocks and add them to model
         self.__conv_blocks, conv_output_shape = self.__build_conv_blocks()
+        for layer in self.__conv_blocks:
+            self.add(layer)
 
         # Build dense tail
         self.__dense_blocks = self.__build_dense_blocks(conv_output_shape)
+        for layer in self.__dense_blocks:
+            self.add(layer)
 
         # Build the model
         self.build(input_shape)
@@ -213,7 +216,7 @@ class PlantNet(Functional):
                     raise ValueError(f"Pool stride values must be positive, got {m}")
 
         for pt in pool_types:
-            if pt != MAX_POOL and pt != AVG_POOL:
+            if pt is not None and pt != MAX_POOL and pt != AVG_POOL:
                 raise ValueError(f"Pool types must be either {MAX_POOL} or {AVG_POOL}, got {pt}")
 
         # Check for inconsistencies between pool-related parameters
@@ -299,7 +302,8 @@ class PlantNet(Functional):
             raise ValueError(f"dense_activity_regularizers must have the same length as dense_dims, got "
                              f"{len(dense_activity_regularizers)} and {len(dense_dims)}")
 
-    def __build_conv_blocks(self) -> (list[Conv2D, MaxPool2D, AvgPool2D, BatchNormalization, Dropout], tuple):
+    def __build_conv_blocks(self) -> (list[Conv2D, MaxPool2D, AvgPool2D,
+                                           BatchNormalization, Dropout], tuple):
         """
         Builds the convolutional blocks of the network.
 
@@ -331,7 +335,7 @@ class PlantNet(Functional):
         # Add convolutional layer
         convolutional_layer = Conv2D(
             filters=self.__filters[index],
-            kernel=self.__kernel_sizes[index],
+            kernel_size=self.__kernel_sizes[index],
             strides=self.__conv_strides[index],
             activation=self.__conv_activations[index],
             padding="same",
@@ -356,9 +360,19 @@ class PlantNet(Functional):
         if self.__pool_sizes[index] is not None:
             pool_layer = None
             if self.__pool_types[index] == AVG_POOL:
-                pool_layer = AvgPool2D(self.__pool_sizes[index], strides=self.__pool_strides[index], padding='same')
+                pool_layer = AvgPool2D(
+                    self.__pool_sizes[index],
+                    strides=self.__pool_strides[index],
+                    padding='valid',
+                    name=f"avg_pool_layer{index}"
+                )
             elif self.__pool_types[index] == MAX_POOL:
-                pool_layer = MaxPool2D(self.__pool_sizes[index], strides=self.__pool_strides[index], padding='same')
+                pool_layer = MaxPool2D(
+                    self.__pool_sizes[index],
+                    strides=self.__pool_strides[index],
+                    padding='valid',
+                    name=f"max_pool_layer{index}"
+                )
             output_shape = pool_layer.compute_output_shape(output_shape)
             conv_block.append(pool_layer)
 
@@ -570,6 +584,7 @@ class PlantNet(Functional):
     def get_config(self):
         config_dict = {
             "input_shape": self.__input_shape,
+            "filters": self.__filters,
             "kernel_sizes": self.__kernel_sizes,
             "conv_activations": self.__conv_activations,
             "conv_strides": self.__conv_strides,
@@ -590,3 +605,29 @@ class PlantNet(Functional):
     @classmethod
     def from_config(cls, config, custom_objects=None):
         return cls(**config)
+
+
+def load_plantnet(path: str, custom_objects: Optional[dict] = None) -> PlantNet:
+    """
+    Loads PlantNet from given path.
+
+    :param path: path to load the network from.
+    :param custom_objects: additional custom objects to load.
+    :return: the loaded PlantNet instance with stored weights and configuration.
+    """
+    if custom_objects is None:
+        model = tf.keras.models.load_model(path, custom_objects={
+            "PlantNet": PlantNet
+        })
+    else:
+        model = tf.keras.models.load_model(path, custom_objects={
+            "PlantNet": PlantNet,
+            **custom_objects
+        })
+    config = model.get_config()
+    weights = model.get_weights()
+    inputs = tf.keras.Input(config.get("input_shape")[1:])
+    model = PlantNet.from_config(config)
+    model.set_weights(weights)
+    model(inputs)  # to setup model output_shape
+    return model
