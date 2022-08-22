@@ -3,7 +3,7 @@ from typing import final
 from bidict import bidict
 import tensorflow as tf
 from preprocessing.constants import NAME_TASTES, CLASS_NAMES, TRAIN_PATH_ORIGINAL, CHANNELS, IMG_SIZE, \
-    NORMALIZATION_CONSTANT, IMG_HEIGHT, IMG_WIDTH, CLASS_COUNT, TEST_PATH_ORIGINAL
+    NORMALIZATION_CONSTANT, IMG_HEIGHT, IMG_WIDTH, TEST_PATH_ORIGINAL
 
 
 MAX_DELTA_BRIGHTNESS: final = 32.0
@@ -46,7 +46,7 @@ def n_images(path: str, classes: bidict[int, str]) -> int:
 
 
 def decode_image(image):
-    # image.shape == tf.TensorShape([IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_DEPTH])
+    # image.shape == tf.TensorShape([IMAGE_HEIGHT, IMAGE_WIDTH, CHANNELS])
     return tf.keras.utils.array_to_img(image.numpy())
 
 
@@ -57,7 +57,7 @@ def decode_label(label):
     :return decoded label.
     """
     # label.shape == tf.TensorShape([class_count])
-    return CLASS_NAMES[tf.argmax(label)].numpy().decode('UTF-8')
+    return CLASS_NAMES[label]
 
 
 def decode_image_id(image_id):
@@ -150,7 +150,7 @@ def get_feature_and_label(x, y):
         tf.TensorShape([IMG_HEIGHT, IMG_WIDTH, CHANNELS])
     )
 
-    features_labels[1].set_shape(tf.TensorShape([CLASS_COUNT]))
+    features_labels[1].set_shape(tf.TensorShape(()))
     features_labels[2].set_shape(tf.TensorShape([1]))
     tf.cast(features_labels[2], tf.string, name='image_id')
 
@@ -174,7 +174,7 @@ def __get_feature_function(image_id):
         name=_image_id
     )
     _img = tf.image.resize(_img, IMG_SIZE)
-    _img = tf.cast(_img, tf.float32)/255.0
+    _img = tf.cast(_img, tf.float32)/NORMALIZATION_CONSTANT
 
     return _img, image_id
 

@@ -1,31 +1,25 @@
 import os
-import random
-import numpy as np
 from typing import final
 import tensorflow as tf
 
 
-# Dataset-related constants
+# Dataset path-related constants
 DATASET_PATH: final = "data"
 DATASET_PATH_CLEANED: final = os.path.join(DATASET_PATH, "cleaned")
 DATASET_PATH_ORIGINAL: final = os.path.join(DATASET_PATH, "butterfly_mimics")
 
 TRAIN_PATH_ORIGINAL: final = os.path.join(DATASET_PATH_ORIGINAL, "images")
-TRAIN_CSV: final = os.path.join(TRAIN_PATH_ORIGINAL, "images.csv")
+TRAIN_CSV: final = os.path.join(DATASET_PATH_ORIGINAL, "images.csv")
 TRAIN_PATH_CLEANED: final = os.path.join(DATASET_PATH_CLEANED, "train")
-TRAIN_PATH_IMAGES_LABELS: final = TRAIN_PATH_CLEANED + "/train_images_labels.npz"
 
-VALIDATION_PATH_CLEANED: final = DATASET_PATH_CLEANED + "/validation"
-VALIDATION_PATH_IMAGES_LABELS: final = VALIDATION_PATH_CLEANED + "/validation_images_labels.npz"
-
-TRAIN_CSV_PATH: final = DATASET_PATH + "/train.csv"
-TRAIN_CSV_PATH_CLEANED: final = DATASET_PATH_CLEANED + "/train_cleaned.csv"
+VALIDATION_PATH_CLEANED: final = os.path.join(DATASET_PATH_CLEANED, "validation")
+EVALUATION_PATH_CLEANED: final = os.path.join(DATASET_PATH_CLEANED, "evaluation")
 
 TEST_PATH_ORIGINAL: final = os.path.join(DATASET_PATH_ORIGINAL, "image_holdouts")
-TEST_CSV: final = os.path.join(TEST_PATH_ORIGINAL, "images.csv")
+TEST_CSV: final = os.path.join(DATASET_PATH_ORIGINAL, "image_holdouts.csv")
 TEST_PATH_CLEANED: final = os.path.join(DATASET_PATH_CLEANED, "test")
-TEST_PATH_IMAGES: final = TEST_PATH_CLEANED + "/test_images.npy"
 
+# Other dataset-related constants
 CLASS_NAMES: final = ['black', 'monarch', 'pipevine', 'spicebush', 'tiger', 'viceroy']
 NAME_TASTES = {
     'black': 'yum',
@@ -48,11 +42,10 @@ NORMALIZATION_CONSTANT: final = 255.0
 
 # Splitting-related constants
 VALIDATION_SIZE: final = 0.2
-RANDOM_STATE: final = 42
+EVAL_SIZE: final = 0.2
+RANDOM_STATE: final = 43
 AUTOTUNE: final = tf.data.experimental.AUTOTUNE
 
-# Set random state
-os.environ['PYTHONHASHSEED'] = str(RANDOM_STATE)
-random.seed = RANDOM_STATE
-np.random.seed = RANDOM_STATE
-tf.random.set_seed(RANDOM_STATE)
+# Other preprocessing constants
+AUGMENTATION_RATIO: final = 3
+BUFFER_SIZE: final = 1024
