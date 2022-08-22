@@ -91,7 +91,7 @@ def main():
     train_ds_prebatch = train_ds_prebatch.map(train_preprocess, num_parallel_calls=AUTOTUNE)
     train_ds_prebatch = train_ds_prebatch.shuffle(buffer_size=BUFFER_SIZE, reshuffle_each_iteration=True)
 
-    # Get a batch from the train set to test things up, plotting shapes and the one image
+    # Get a batch from the train set to test things up, plotting shapes and one image
     print("Printing shapes to check results...")
     x, y = next(iter(train_ds_prebatch.batch(_BATCH_SIZE)))
     print("Shape input batch: ", x.shape)
@@ -100,7 +100,6 @@ def main():
     image, label = next(iter(train_ds_prebatch.skip(2)))
     print("image shape:", image.shape)
     print("label shape:", label.shape, "\t\t\t", label)
-    print()
     print(decode_label(label))
     plt.imshow(decode_image(image))  # for normal run display image
     plt.show()
