@@ -28,24 +28,13 @@ def get_class_names() -> bidict[int, str]:
     return class_names_dict
 
 
-def n_images(path: str, classes: bidict[int, str]) -> int:
-    """
-    Gets the total number of the images in the given path with the given classes.
-
-    :param path: dataset path.
-    :param classes: class bidirectional dictionary.
-    :return: an integer indicating the total number of images in the given path having the given classes.
-    """
-    count = 0
-    for class_num in classes:
-        # Get the full class folder path
-        class_path = os.path.join(path, classes[class_num])
-        count += len(os.listdir(class_path))
-
-    return count
-
-
 def decode_image(image):
+    """
+    It takes a tensor of shape (IMAGE_HEIGHT, IMAGE_WIDTH, CHANNELS) and returns a PIL image.
+
+    :param image: an array of shape (IMAGE_HEIGHT, IMAGE_WIDTH, CHANNELS) representing the image to decode.
+    :return: PIL image obtained from given array.
+    """
     # image.shape == tf.TensorShape([IMAGE_HEIGHT, IMAGE_WIDTH, CHANNELS])
     return tf.keras.utils.array_to_img(image.numpy())
 
@@ -57,7 +46,8 @@ def decode_label(label):
     :return decoded label.
     """
     # label.shape == tf.TensorShape([class_count])
-    return CLASS_NAMES[label]
+    classes = get_class_names()
+    return classes.inverse[label]
 
 
 def decode_image_id(image_id):
