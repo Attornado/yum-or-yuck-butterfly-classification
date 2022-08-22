@@ -3,7 +3,7 @@ from typing import final
 from bidict import bidict
 import tensorflow as tf
 from preprocessing.constants import NAME_TASTES, CLASS_NAMES, TRAIN_PATH_ORIGINAL, CHANNELS, IMG_SIZE, \
-    NORMALIZATION_CONSTANT, IMG_HEIGHT, IMG_WIDTH, CLASS_COUNT, TEST_PATH_ORIGINAL
+    NORMALIZATION_CONSTANT, IMG_HEIGHT, IMG_WIDTH, TEST_PATH_ORIGINAL
 
 
 MAX_DELTA_BRIGHTNESS: final = 32.0
