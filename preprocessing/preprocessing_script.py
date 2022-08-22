@@ -27,10 +27,13 @@ _BATCH_SIZE: final = 32
 def main():
 
     # Read csv files
+    print("Reading csv files...")
     presplit_csv_data = pd.read_csv(TRAIN_CSV)
     test_csv_data = pd.read_csv(TEST_CSV)
 
     # Train/eval split (think about eval as labeled test set)
+    print("Splitting the dataset into train/test/evaluation/validation "
+          "sets and converting them into tensorflow format...")
     train_csv_data, eval_csv_data = train_test_split(
         presplit_csv_data,
         test_size=EVAL_SIZE,
@@ -83,11 +86,13 @@ def main():
     # Maybe drop from eval and test sets too?
 
     # Finish preprocessing of the training set, performing data augmentation
+    print("Performing data augmentation...")
     train_ds_prebatch = train_ds_prebatch.repeat(AUGMENTATION_RATIO)
     train_ds_prebatch = train_ds_prebatch.map(train_preprocess, num_parallel_calls=AUTOTUNE)
     train_ds_prebatch = train_ds_prebatch.shuffle(buffer_size=BUFFER_SIZE, reshuffle_each_iteration=True)
 
     # Get a batch from the train set to test things up, plotting shapes and the one image
+    print("Printing shapes to check results...")
     x, y = next(iter(train_ds_prebatch.batch(_BATCH_SIZE)))
     print("Shape input batch: ", x.shape)
     print("Shapes:")
@@ -102,10 +107,13 @@ def main():
     # IPython.display.display(decode_image(image))  # for Jupyter/Colab/Kaggle display image
 
     # Store train/eval/validation pre-batch datasets with tensorflow
+    print("Storing results...")
     tf.data.experimental.save(dataset=train_ds_prebatch, path=TRAIN_PATH_CLEANED)
     tf.data.experimental.save(dataset=eval_ds_prebatch, path=EVALUATION_PATH_CLEANED)
     tf.data.experimental.save(dataset=val_ds_prebatch, path=VALIDATION_PATH_CLEANED)
     tf.data.experimental.save(dataset=test_ds_prebatch, path=TEST_PATH_CLEANED)
+
+    print("Preprocessing completed!")
 
 
 if __name__ == "__main__":
