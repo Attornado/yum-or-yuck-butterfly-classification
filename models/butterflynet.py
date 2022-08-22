@@ -8,9 +8,9 @@ AVG_POOL: final = "AVG"
 MAX_POOL: final = "MAX"
 
 
-class PlantNet(Sequential):
+class ButterflyNet(Sequential):
     """
-    This class represents a generic 2D convolutional model for image-based plant disease classification, with an
+    This class represents a generic 2D convolutional model for image-based butterflhy species classification, with an
     AlexNet-like architecture.
     """
 
@@ -22,7 +22,7 @@ class PlantNet(Sequential):
                  dense_kernel_regularizers: Optional[list] = None, dense_bias_regularizers: Optional[list] = None,
                  dense_activity_regularizers: Optional[list] = None):
         """
-        Constructs a new PlantNet instance.
+        Constructs a new ButterflyNet instance.
 
         :param input_shape: input shape of the network.
         :param filters: an integer list containing number of convolutional kernels for each convolutional block.
@@ -52,18 +52,18 @@ class PlantNet(Sequential):
             end of the network (None by default, meaning no activity regularization is applied).
         """
         # Call superclass constructor
-        super(PlantNet, self).__init__()
+        super(ButterflyNet, self).__init__()
 
         # Do consistency checks on the given parameters
-        PlantNet.__check_input_shape(input_shape)
-        PlantNet.__check_filters(filters)
-        PlantNet.__check_kernel_sizes(kernel_sizes, len(filters))
-        PlantNet.__check_conv_strides(conv_strides, len(filters))
-        PlantNet.__check_pool(pool_types, pool_sizes, pool_strides, len(filters))
-        PlantNet.__check_batch_normalization(batch_normalization, len(filters))
-        PlantNet.__check_dropout_rate(dropout_conv)
-        PlantNet.__check_dropout_rate(dropout_dense)
-        PlantNet.__check_dense_parameters(
+        ButterflyNet.__check_input_shape(input_shape)
+        ButterflyNet.__check_filters(filters)
+        ButterflyNet.__check_kernel_sizes(kernel_sizes, len(filters))
+        ButterflyNet.__check_conv_strides(conv_strides, len(filters))
+        ButterflyNet.__check_pool(pool_types, pool_sizes, pool_strides, len(filters))
+        ButterflyNet.__check_batch_normalization(batch_normalization, len(filters))
+        ButterflyNet.__check_dropout_rate(dropout_conv)
+        ButterflyNet.__check_dropout_rate(dropout_dense)
+        ButterflyNet.__check_dense_parameters(
             dense_dims,
             dense_activations,
             dense_kernel_regularizers,
@@ -607,27 +607,27 @@ class PlantNet(Sequential):
         return cls(**config)
 
 
-def load_plantnet(path: str, custom_objects: Optional[dict] = None) -> PlantNet:
+def load_butterflynet(path: str, custom_objects: Optional[dict] = None) -> ButterflyNet:
     """
-    Loads PlantNet from given path.
+    Loads ButterflyNet from given path.
 
     :param path: path to load the network from.
     :param custom_objects: additional custom objects to load.
-    :return: the loaded PlantNet instance with stored weights and configuration.
+    :return: the loaded ButterflyNet instance with stored weights and configuration.
     """
     if custom_objects is None:
         model = tf.keras.models.load_model(path, custom_objects={
-            "PlantNet": PlantNet
+            "ButterflyNet": ButterflyNet
         })
     else:
         model = tf.keras.models.load_model(path, custom_objects={
-            "PlantNet": PlantNet,
+            "ButterflyNet": ButterflyNet,
             **custom_objects
         })
     config = model.get_config()
     weights = model.get_weights()
     inputs = tf.keras.Input(config.get("input_shape")[1:])
-    model = PlantNet.from_config(config)
+    model = ButterflyNet.from_config(config)
     model.set_weights(weights)
     model(inputs)  # to setup model output_shape
     return model

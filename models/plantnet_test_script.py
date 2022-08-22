@@ -1,4 +1,4 @@
-from models.plantnet import PlantNet
+from models.butterflynet import ButterflyNet
 from tensorflow.python.keras.regularizers import l1
 import tensorflow as tf
 from tensorflow.keras.optimizers import Adadelta
@@ -28,7 +28,7 @@ def main():
     dense_activity_regularizers = None
 
     # Instantiate the model and compile it
-    model = PlantNet(
+    model = ButterflyNet(
         input_shape=input_shape,
         filters=filters,
         kernel_sizes=kernel_sizes,
@@ -61,7 +61,7 @@ def main():
     model(np.random.rand(1, 640, 480, 3))
     model.save("fitted_models/prediction_models/plantnet/test")
 
-    model = load_model("fitted_models/prediction_models/plantnet/test", custom_objects={"PlantNet": PlantNet})
+    model = load_model("fitted_models/prediction_models/plantnet/test", custom_objects={"ButterflyNet": ButterflyNet})
     model.summary()
 
 

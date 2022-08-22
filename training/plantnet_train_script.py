@@ -7,7 +7,7 @@ from tensorflow.keras.optimizers import Adadelta
 from tensorflow.keras.regularizers import l1
 from tensorflow.keras.metrics import SparseCategoricalAccuracy
 from tensorflow.keras.models import load_model
-from models.plantnet import PlantNet
+from models.butterflynet import ButterflyNet
 from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, CHANNELS, TRAIN_PATH_IMAGES_LABELS, \
     VALIDATION_PATH_IMAGES_LABELS, NORMALIZATION_CONSTANT
 from training.utils import ImageGenerator
@@ -46,7 +46,7 @@ def main():
     # Instantiate the model and compile it
     retraining = int(input("Insert 0 for training and 1 for retraining: "))
     if retraining == 0:
-        model = PlantNet(
+        model = ButterflyNet(
             input_shape=input_shape,
             filters=filters,
             kernel_sizes=kernel_sizes,
@@ -71,10 +71,10 @@ def main():
 
         if weights_only == 0:
             model = load_model(_PLANT_NET_LOAD_PATH, custom_objects={
-                "PlantNet": PlantNet
+                "ButterflyNet": ButterflyNet
             })
         else:
-            model = PlantNet(
+            model = ButterflyNet(
                 input_shape=input_shape,
                 filters=filters,
                 kernel_sizes=kernel_sizes,
@@ -93,7 +93,7 @@ def main():
                 dense_activity_regularizers=dense_activity_regularizers
             )
             model.load_weights(_PLANT_NET_LOAD_PATH + "/" + "variables/variables")
-            model2 = model = PlantNet(
+            model2 = model = ButterflyNet(
                 input_shape=input_shape,
                 filters=filters,
                 kernel_sizes=kernel_sizes,
