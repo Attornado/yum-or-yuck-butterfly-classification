@@ -11,11 +11,11 @@ from models.butterflynet import ButterflyNet
 from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, CHANNELS, TRAIN_PATH_IMAGES_LABELS, \
     VALIDATION_PATH_IMAGES_LABELS, NORMALIZATION_CONSTANT
 from training.utils import ImageGenerator
-from training.constants import FITTED_PLANTNET_DIR, PLOT_DIR
+from training.constants import FITTED_BUTTERFLYTNET_DIR, PLOT_DIR
 
 
 _EPOCHS_LOAD: final = 100
-_PLANT_NET_LOAD_PATH: final = FITTED_PLANTNET_DIR + f"/plantnet_{_EPOCHS_LOAD}_epochs_v0.1"
+_PLANT_NET_LOAD_PATH: final = FITTED_BUTTERFLYTNET_DIR + f"/plantnet_{_EPOCHS_LOAD}_epochs_v0.1"
 
 
 def main():
@@ -173,10 +173,10 @@ def main():
         model_name = f"plantnet_{epochs + _EPOCHS_LOAD}_epochs_v{version}"
     else:
         model_name = f"plantnet_{epochs}_epochs_v{version}"
-    model.save(f'{FITTED_PLANTNET_DIR}/{model_name}')
+    model.save(f'{FITTED_BUTTERFLYTNET_DIR}/{model_name}')
 
     # Save model summary into file to store architecture
-    with open(f'{FITTED_PLANTNET_DIR}/{model_name}.txt', 'w') as fp:
+    with open(f'{FITTED_BUTTERFLYTNET_DIR}/{model_name}.txt', 'w') as fp:
         model.summary(print_fn=lambda x: fp.write(x + '\n'))
 
     # Plot results loss
