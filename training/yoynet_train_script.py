@@ -42,7 +42,7 @@ def main():
     dense_activations = ['relu', 'softmax']
     dropout_rates = [0.5]
     weights = 'imagenet'
-    dense_kernel_regularizers = [None, None]
+    dense_kernel_regularizers = [l1(1e-5), None]
     dense_bias_regularizers = [None, None]
     dense_activity_regularizers = [None, None]
 
@@ -85,7 +85,7 @@ def main():
     model.summary()
 
     # Set model training parameters
-    epochs = 200
+    epochs = 100
     loss = tf.keras.losses.SparseCategoricalCrossentropy(
         from_logits=False,
         name='sparse_categorical_crossentropy'
@@ -100,7 +100,7 @@ def main():
         EarlyStopping(
             monitor='val_loss',
             min_delta=0.001,
-            patience=50,
+            patience=30,
             verbose=1,
             mode='auto',
             restore_best_weights=True
@@ -109,7 +109,7 @@ def main():
     metrics = [
         SparseCategoricalAccuracy(name='accuracy')
     ]
-    version = 0.1  # For easy saving of multiple model versions
+    version = 0.2  # For easy saving of multiple model versions
 
     # Compile the model
     model.compile(
@@ -141,13 +141,13 @@ def main():
     plt.plot(history.history['loss'], label='train')
     plt.plot(history.history['val_loss'], label='validation')
     plt.legend()
-    plt.savefig(f"{PLOT_DIR}_loss/{model_name}.svg")
+    plt.savefig(f"{PLOT_DIR}/{model_name}_loss.svg")
     plt.show()
 
     plt.plot(history.history['accuracy'], label='train')
     plt.plot(history.history['val_accuracy'], label='validation')
     plt.legend()
-    plt.savefig(f"{PLOT_DIR}_accuracy/{model_name}.svg")
+    plt.savefig(f"{PLOT_DIR}/{model_name}_accuracy.svg")
     plt.show()
 
 
