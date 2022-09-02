@@ -2,9 +2,9 @@ from typing import final
 import os
 from matplotlib import pyplot as plt
 import tensorflow as tf
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.optimizers import Adadelta
-from tensorflow.keras.regularizers import l1, l2
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.keras.optimizers import Adadelta, Adam
+from tensorflow.keras.regularizers import l1, l2, L1L2
 from tensorflow.keras.metrics import SparseCategoricalAccuracy
 from tensorflow.keras.models import load_model
 from models.yoynet import YoYNet
@@ -14,7 +14,8 @@ from training.constants import FITTED_YOYNET_DIR, PLOT_DIR
 
 
 _EPOCHS_LOAD: final = 100
-_YOYNET_LOAD_PATH: final = os.path.join(FITTED_YOYNET_DIR, f"/plantnet_{_EPOCHS_LOAD}_epochs_v0.1")
+_VERSION_LOAD: final = 0.2
+_YOYNET_LOAD_PATH: final = os.path.join(FITTED_YOYNET_DIR, f"yoynet_{_EPOCHS_LOAD}_epochs_v{_VERSION_LOAD}")
 
 
 def main():
@@ -42,9 +43,10 @@ def main():
     dense_activations = ['relu', 'softmax']
     dropout_rates = [0.5]
     weights = 'imagenet'
+    scale = 'b2'
     dense_kernel_regularizers = [l1(1e-5), None]
-    dense_bias_regularizers = [None, None]
-    dense_activity_regularizers = [None, None]
+    dense_bias_regularizers = [l1(1e-5), None]
+    dense_activity_regularizers = [None, l1(1e-5)]
 
     # Instantiate the model and compile it
     retraining = int(input("Insert 0 for training and 1 for retraining: "))
@@ -56,6 +58,7 @@ def main():
             dense_activations=dense_activations,
             weights=weights,
             pooling=pooling,
+            scale=scale,
             dense_kernel_regularizers=dense_kernel_regularizers,
             dense_bias_regularizers=dense_bias_regularizers,
             dense_activity_regularizers=dense_activity_regularizers
@@ -75,6 +78,7 @@ def main():
                 dense_activations=dense_activations,
                 weights=weights,
                 pooling=pooling,
+                scale=scale,
                 dense_kernel_regularizers=dense_kernel_regularizers,
                 dense_bias_regularizers=dense_bias_regularizers,
                 dense_activity_regularizers=dense_activity_regularizers
@@ -85,7 +89,15 @@ def main():
     model.summary()
 
     # Set model training parameters
-    epochs = 100
+    epochs = 200
+
+    version = 0.8  # For easy saving of multiple model versions
+
+    if retraining != 0:
+        model_name = f"yoynet_{epochs + _EPOCHS_LOAD}_epochs_v{version}"
+    else:
+        model_name = f"yoynet_{epochs}_epochs_v{version}"
+
     loss = tf.keras.losses.SparseCategoricalCrossentropy(
         from_logits=False,
         name='sparse_categorical_crossentropy'
@@ -96,20 +108,27 @@ def main():
         epsilon=1e-07,
         name='adadelta_optimizer'
     )
+
     callbacks = [
         EarlyStopping(
             monitor='val_loss',
             min_delta=0.001,
-            patience=30,
+            patience=50,
             verbose=1,
             mode='auto',
             restore_best_weights=True
+        ),
+        ModelCheckpoint(
+            filepath=f"{FITTED_YOYNET_DIR}/checkpoint_dir/{model_name}_checkpoint/{model_name}",
+            save_weights_only=True,
+            monitor='val_accuracy',
+            mode='max',
+            save_best_only=True
         )
     ]
     metrics = [
         SparseCategoricalAccuracy(name='accuracy')
     ]
-    version = 0.2  # For easy saving of multiple model versions
 
     # Compile the model
     model.compile(
@@ -126,11 +145,10 @@ def main():
         callbacks=callbacks
     )
 
+    # Evaluate on the evaluation set
+    #model.evaluate(eval_ds)
+
     # Save the model
-    if retraining != 0:
-        model_name = f"yoynet_{epochs + _EPOCHS_LOAD}_epochs_v{version}"
-    else:
-        model_name = f"yoynet_{epochs}_epochs_v{version}"
     model.save(f'{FITTED_YOYNET_DIR}/{model_name}')
 
     # Save model summary into file to store architecture
