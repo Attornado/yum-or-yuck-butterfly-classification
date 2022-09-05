@@ -9,7 +9,7 @@ from preprocessing.constants import RANDOM_STATE
 
 __SCALES_EFFICIENT_NET: final = {"b0", "b1", "b2", "b3", "s", "m", "l"}
 __POOLS_EFFICIENT_NET: final = {"max", "avg"}
-MODEL_NAME_DEFAULT: final = "yoyonet"
+MODEL_NAME_DEFAULT: final = "yoynet"
 
 
 def YoYNet(input_shape: tuple[Optional[int], Optional[int], Optional[int], Optional[int]], dense_dims: list[int],
