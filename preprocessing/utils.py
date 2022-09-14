@@ -47,7 +47,7 @@ def decode_label(label):
     """
     # label.shape == tf.TensorShape([class_count])
     classes = get_class_names()
-    return classes.inverse[label]
+    return classes[label]
 
 
 def decode_image_id(image_id):
