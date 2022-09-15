@@ -141,3 +141,5 @@ data_predictions/*
 fitted_models
 fitted_models/*
 fitted_models/
+data_backup/
+data_backup/*

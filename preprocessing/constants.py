@@ -47,5 +47,5 @@ RANDOM_STATE: final = 43
 AUTOTUNE: final = tf.data.experimental.AUTOTUNE
 
 # Other preprocessing constants
-AUGMENTATION_RATIO: final = 3
+AUGMENTATION_RATIO: final = 5
 BUFFER_SIZE: final = 1024
