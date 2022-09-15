@@ -41,13 +41,31 @@ def decode_image(image):
 
 def decode_label(label):
     """
-    :param label: label to decode.
+    :param label: integer label to decode.
 
-    :return decoded label.
+    :return string decoded label.
     """
     # label.shape == tf.TensorShape([class_count])
     classes = get_class_names()
-    return classes[label]
+
+    try:
+        return classes[label.numpy()]
+    except AttributeError:
+        return classes[label]
+
+
+def decode_label_inverse(label):
+    """
+    :param label: string label to decode.
+
+    :return integer decoded label.
+    """
+    # label.shape == tf.TensorShape([class_count])
+    classes = get_class_names()
+    try:
+        return classes.inverse[label.numpy()]
+    except AttributeError:
+        return classes.inverse[label]
 
 
 def decode_image_id(image_id):
