@@ -22,7 +22,7 @@ def main():
     eval_ds = eval_ds_prebatch.batch(EVALUATION_BATCH_SIZE)
     model = tf.keras.models.load_model(_MODEL_PATH)
 
-    # Make predicition and format them into a prediction data frame
+    # Make prediction and format them into a prediction data frame
     preds = model.predict(eval_ds, verbose=1)
     predicted_label_confidence = decode_predictions(preds, CLASS_NAMES)
     eval_ds_decoded = [
