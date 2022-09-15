@@ -23,7 +23,7 @@ def main():
     model = tf.keras.models.load_model(_MODEL_PATH)
 
     # Make predicition and format them into a prediction data frame
-    preds = model.predict(eval_ds)
+    preds = model.predict(eval_ds, verbose=1)
     predicted_label_confidence = decode_predictions(preds, CLASS_NAMES)
     eval_ds_decoded = [
         (decode_image(m), decode_label(l.numpy()), decode_image_id(image_id)) for (m, l, image_id) in eval_ds.unbatch()
