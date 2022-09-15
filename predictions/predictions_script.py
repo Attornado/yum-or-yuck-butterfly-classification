@@ -29,7 +29,7 @@ def main():
     # Combine the actual and predicted data together into a single list
     test_ds_decoded = [(decode_image(m), decode_image_id(im_id)) for (m, im_id) in test_ds.unbatch()]
 
-    # Zip the tuples, manually
+    # Zip the tuples manually
     predictions_df = pd.DataFrame(
         [(test_ds_decoded[i][1],  # id
           test_ds_decoded[i][0],  # X
@@ -40,7 +40,7 @@ def main():
         columns=['id', 'X', 'y_pred', 'yum_pred', 'y_conf'])
 
     # Print head to see dataframe structure
-    predictions_df.head()
+    print(predictions_df.head())
 
     # Change the dataframe to match the expected submission CSV
     submit_df = predictions_df[['id', 'y_pred']]
