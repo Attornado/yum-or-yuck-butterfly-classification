@@ -33,7 +33,8 @@ def plot_confusion_matrix(cm, cmap=None, title=None,
                           quad_line=True,
                           size=(10, 8), savepath: Optional[str] = None):
     """
-   It takes a confusion matrix and plots it with a color map, text, and optional annotations.
+   Plots a confusion matrix and plots it with a color map, text, and optional annotations, optionally saving it in the
+   given path.
 
    :param cm: The confusion matrix to be plotted
    :param cmap: The color map to use
