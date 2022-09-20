@@ -10,7 +10,7 @@ from preprocessing.constants import EVALUATION_PATH_CLEANED, YUMS, YUCKS, CLASS_
 from preprocessing.utils import decode_image, decode_label, decode_image_id
 
 
-_VERSION_LOAD: final = 0.4
+_VERSION_LOAD: final = 0.2
 _EPOCHS_LOAD: final = 100
 _MODEL_NAME: final = f"yoynet_{_EPOCHS_LOAD}_epochs_v{_VERSION_LOAD}"
 _MODEL_PATH: final = os.path.join(FITTED_YOYNET_DIR, _MODEL_NAME)
@@ -21,6 +21,7 @@ def main():
     eval_ds_prebatch = tf.data.experimental.load(EVALUATION_PATH_CLEANED)
     eval_ds = eval_ds_prebatch.batch(EVALUATION_BATCH_SIZE)
     model = tf.keras.models.load_model(_MODEL_PATH)
+    model.summary()
 
     # Make prediction and format them into a prediction data frame
     preds = model.predict(eval_ds, verbose=1)

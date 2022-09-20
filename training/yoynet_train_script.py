@@ -9,12 +9,12 @@ from tensorflow.keras.metrics import SparseCategoricalAccuracy
 from tensorflow.keras.models import load_model
 from models.yoynet import YoYNet
 from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, CHANNELS, TRAIN_PATH_CLEANED, VALIDATION_PATH_CLEANED, \
-    EVALUATION_PATH_CLEANED, CLASS_COUNT, AUTOTUNE
+    CLASS_COUNT, AUTOTUNE
 from training.constants import FITTED_YOYNET_DIR, PLOT_DIR
 
 
-_EPOCHS_LOAD: final = 100
-_VERSION_LOAD: final = 0.2
+_EPOCHS_LOAD: final = 200
+_VERSION_LOAD: final = 3.0
 _YOYNET_LOAD_PATH: final = os.path.join(FITTED_YOYNET_DIR, f"yoynet_{_EPOCHS_LOAD}_epochs_v{_VERSION_LOAD}")
 
 
@@ -25,7 +25,6 @@ def main():
     # Load the training and validation sets
     train_ds_prebatch = tf.data.experimental.load(TRAIN_PATH_CLEANED)
     val_ds_prebatch = tf.data.experimental.load(VALIDATION_PATH_CLEANED)
-    eval_ds_prebatch = tf.data.experimental.load(EVALUATION_PATH_CLEANED)
 
     # Fetch the batches for the train, evaluation and validation sets to make training faster
     train_ds_batch = train_ds_prebatch.batch(batch_size)
@@ -34,19 +33,17 @@ def main():
     val_ds_batch = val_ds_prebatch.batch(batch_size)
     val_ds = val_ds_batch.prefetch(AUTOTUNE)
 
-    eval_ds = eval_ds_prebatch.batch(batch_size)
-
     # Define model parameters
     input_shape = (None, IMG_HEIGHT, IMG_WIDTH, CHANNELS)
     pooling = "avg"
-    dense_dims = [512, CLASS_COUNT]
-    dense_activations = ['relu', 'softmax']
-    dropout_rates = [0.5]
+    dense_dims = [512, 256, 128, CLASS_COUNT]
+    dense_activations = ['relu', 'relu', 'relu', 'softmax']
+    dropout_rates = [0.5, 0.5, 0.5]
     weights = 'imagenet'
-    scale = 'b2'
-    dense_kernel_regularizers = [l1(1e-5), None]
-    dense_bias_regularizers = [l1(1e-5), None]
-    dense_activity_regularizers = [None, l1(1e-5)]
+    scale = 'b1'
+    dense_kernel_regularizers = [l1(1e-5), l1(1e-5), l1(1e-5), None]
+    dense_bias_regularizers = [l1(1e-5), l1(1e-5), l1(1e-5), None]
+    dense_activity_regularizers = [l1(1e-5), l1(1e-5), l1(1e-5), l1(1e-5)]
 
     # Instantiate the model and compile it
     retraining = int(input("Insert 0 for training and 1 for retraining: "))
@@ -91,7 +88,7 @@ def main():
     # Set model training parameters
     epochs = 200
 
-    version = 0.8  # For easy saving of multiple model versions
+    version = 3.2  # For easy saving of multiple model versions
 
     if retraining != 0:
         model_name = f"yoynet_{epochs + _EPOCHS_LOAD}_epochs_v{version}"
@@ -108,6 +105,7 @@ def main():
         epsilon=1e-07,
         name='adadelta_optimizer'
     )
+    optimizer = Adam(learning_rate=3e-6)
 
     callbacks = [
         EarlyStopping(
@@ -144,9 +142,6 @@ def main():
         validation_data=val_ds,
         callbacks=callbacks
     )
-
-    # Evaluate on the evaluation set
-    #model.evaluate(eval_ds)
 
     # Save the model
     model.save(f'{FITTED_YOYNET_DIR}/{model_name}')

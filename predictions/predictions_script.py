@@ -9,8 +9,8 @@ from preprocessing.utils import decode_image, decode_image_id
 from predictions.constants import PREDICTIONS_DIR, PREDICTIONS_BATCH_SIZE
 
 
-_VERSION_LOAD: final = 0.4
-_EPOCHS_LOAD: final = 100
+_VERSION_LOAD: final = 3.1
+_EPOCHS_LOAD: final = 300
 _MODEL_NAME: final = f"yoynet_{_EPOCHS_LOAD}_epochs_v{_VERSION_LOAD}"
 _MODEL_PATH: final = os.path.join(FITTED_YOYNET_DIR, _MODEL_NAME)
 _SUBMIT_PATH: final = os.path.join(PREDICTIONS_DIR, f"{_MODEL_NAME}_predictions.csv")
