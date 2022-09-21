@@ -14,7 +14,7 @@ from training.constants import FITTED_YOYNET_DIR, PLOT_DIR
 
 
 _EPOCHS_LOAD: final = 200
-_VERSION_LOAD: final = 3.0
+_VERSION_LOAD: final = 3.2
 _YOYNET_LOAD_PATH: final = os.path.join(FITTED_YOYNET_DIR, f"yoynet_{_EPOCHS_LOAD}_epochs_v{_VERSION_LOAD}")
 
 
@@ -36,14 +36,15 @@ def main():
     # Define model parameters
     input_shape = (None, IMG_HEIGHT, IMG_WIDTH, CHANNELS)
     pooling = "avg"
-    dense_dims = [512, 256, 128, CLASS_COUNT]
-    dense_activations = ['relu', 'relu', 'relu', 'softmax']
-    dropout_rates = [0.5, 0.5, 0.5]
+    dense_dims = [512, 256, CLASS_COUNT]
+    dense_activations = ['relu', 'relu', 'softmax']
+    dropout_rates = [0.5, 0.5]
     weights = 'imagenet'
-    scale = 'b1'
-    dense_kernel_regularizers = [l1(1e-5), l1(1e-5), l1(1e-5), None]
-    dense_bias_regularizers = [l1(1e-5), l1(1e-5), l1(1e-5), None]
-    dense_activity_regularizers = [l1(1e-5), l1(1e-5), l1(1e-5), l1(1e-5)]
+    freeze = True
+    scale = 'l'
+    dense_kernel_regularizers = [l1(1e-5), l1(1e-5), None]
+    dense_bias_regularizers = [l1(1e-5), l1(1e-5), None]
+    dense_activity_regularizers = [l1(1e-5), l1(1e-5), l1(1e-5)]
 
     # Instantiate the model and compile it
     retraining = int(input("Insert 0 for training and 1 for retraining: "))
@@ -58,7 +59,8 @@ def main():
             scale=scale,
             dense_kernel_regularizers=dense_kernel_regularizers,
             dense_bias_regularizers=dense_bias_regularizers,
-            dense_activity_regularizers=dense_activity_regularizers
+            dense_activity_regularizers=dense_activity_regularizers,
+            freeze=freeze
         )
     else:
         weights_only = int(
@@ -78,7 +80,8 @@ def main():
                 scale=scale,
                 dense_kernel_regularizers=dense_kernel_regularizers,
                 dense_bias_regularizers=dense_bias_regularizers,
-                dense_activity_regularizers=dense_activity_regularizers
+                dense_activity_regularizers=dense_activity_regularizers,
+                freeze=freeze
             )
             model.load_weights(os.path.join(_YOYNET_LOAD_PATH, "variables", "variables"))
 
@@ -105,7 +108,7 @@ def main():
         epsilon=1e-07,
         name='adadelta_optimizer'
     )
-    optimizer = Adam(learning_rate=3e-6)
+    # optimizer = Adam(learning_rate=3e-6)
 
     callbacks = [
         EarlyStopping(
@@ -145,6 +148,7 @@ def main():
 
     # Save the model
     model.save(f'{FITTED_YOYNET_DIR}/{model_name}')
+    print(f"Model {model_name} saved successfully.")
 
     # Save model summary into file to store architecture
     with open(f'{FITTED_YOYNET_DIR}/{model_name}.txt', 'w') as fp:
@@ -162,6 +166,7 @@ def main():
     plt.legend()
     plt.savefig(f"{PLOT_DIR}/{model_name}_accuracy.svg")
     plt.show()
+    print(f"Training graphs of {model_name} saved successfully.")
 
 
 if __name__ == "__main__":
