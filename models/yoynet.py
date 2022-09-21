@@ -15,7 +15,7 @@ MODEL_NAME_DEFAULT: final = "yoynet"
 def YoYNet(input_shape: tuple[Optional[int], Optional[int], Optional[int], Optional[int]], dense_dims: list[int],
            dense_activations: list, dropout_rates: list[float], dense_kernel_regularizers: Optional[list] = None,
            dense_bias_regularizers: Optional[list] = None, dense_activity_regularizers: Optional[list] = None,
-           scale: str = "b1", pooling: Optional[str] = None, weights: Optional[str] = 'imagenet',
+           scale: str = "b1", pooling: Optional[str] = None, weights: Optional[str] = 'imagenet', freeze: bool = False,
            name: str = MODEL_NAME_DEFAULT) -> Model:
     """
     Constructs a new YoYNet model, consisting in a convolutional neural network with a pre-trained EfficientNetV2 model
@@ -47,6 +47,7 @@ def YoYNet(input_shape: tuple[Optional[int], Optional[int], Optional[int], Optio
           be applied.
     :param weights: either of `None` (random initialization), `"imagenet"` (pre-training on ImageNet), or the path to
         the weights file to be loaded. Defaults to `"imagenet"`.
+    :param freeze: whether or not to freeze the weights in the EfficientNetV2 architecture. Defaults to `False`.
     :param name: a string representing the name of the model.
 
     :return: a new YoYNet model with given parameters.
@@ -79,6 +80,13 @@ def YoYNet(input_shape: tuple[Optional[int], Optional[int], Optional[int], Optio
 
     # Build EfficientNetV2
     efficient_net = _build_efficient_net(input_shape[1:], scale, pooling, weights)
+
+    # Freeze the weights if required
+    if freeze:
+        efficient_net.trainable = False
+    else:
+        efficient_net.trainable = True
+
     x = efficient_net(x)
 
     # Build dense tail
