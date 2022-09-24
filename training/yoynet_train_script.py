@@ -108,7 +108,7 @@ def main():
         epsilon=1e-07,
         name='adadelta_optimizer'
     )
-    # optimizer = Adam(learning_rate=3e-6)
+    optimizer = Adam(learning_rate=3e-6)
 
     callbacks = [
         EarlyStopping(
