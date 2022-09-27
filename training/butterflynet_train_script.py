@@ -3,19 +3,21 @@ import os
 from matplotlib import pyplot as plt
 import tensorflow as tf
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-from tensorflow.keras.optimizers import Adadelta, Adam
+from tensorflow.keras.optimizers import Adadelta, Adam, SGD
 from tensorflow.keras.regularizers import l1, l2, L1L2
 from tensorflow.keras.metrics import SparseCategoricalAccuracy
 from tensorflow.keras.models import load_model
-from models.yoynet import YoYNet
+from models.butterflynet import ButterflyNet
 from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, CHANNELS, TRAIN_PATH_CLEANED, VALIDATION_PATH_CLEANED, \
     CLASS_COUNT, AUTOTUNE
-from training.constants import FITTED_YOYNET_DIR, PLOT_DIR
+from training.constants import FITTED_BUTTERFLYTNET_DIR, PLOT_DIR
 
 
 _EPOCHS_LOAD: final = 200
-_VERSION_LOAD: final = 3.5
-_YOYNET_LOAD_PATH: final = os.path.join(FITTED_YOYNET_DIR, f"yoynet_{_EPOCHS_LOAD}_epochs_v{_VERSION_LOAD}")
+_VERSION_LOAD: final = 3.3
+_BUTTERFLYTNET_LOAD_PATH: final = os.path.join(
+    FITTED_BUTTERFLYTNET_DIR, 
+    f"butterflynet_{_EPOCHS_LOAD}_epochs_v{_VERSION_LOAD}")
 
 
 def main():
@@ -36,27 +38,27 @@ def main():
     # Define model parameters
     input_shape = (None, IMG_HEIGHT, IMG_WIDTH, CHANNELS)
     pooling = "avg"
-    dense_dims = [512, 256, CLASS_COUNT]
-    dense_activations = ['relu', 'relu', 'softmax']
-    dropout_rates = [0.5, 0.5]
+    dense_dims = [512, CLASS_COUNT]
+    dense_activations = ['relu', 'softmax']
+    dropout_rates = [0.5]
     weights = 'imagenet'
     freeze = False
-    scale = 'b1'
-    dense_kernel_regularizers = [l2(1e-5), l2(1e-5), None]
-    dense_bias_regularizers = [l2(1e-5), l2(1e-5), None]
-    dense_activity_regularizers = [None, l1(1e-5), l1(1e-5)]
+    version = 'vgg19'
+    dense_kernel_regularizers = [l2(1e-5), None]
+    dense_bias_regularizers = [l2(1e-5), None]
+    dense_activity_regularizers = [l1(1e-5), l1(1e-5)]
 
     # Instantiate the model and compile it
     retraining = int(input("Insert 0 for training and 1 for retraining: "))
     if retraining == 0:
-        model = YoYNet(
+        model = ButterflyNet(
             input_shape=input_shape,
             dropout_rates=dropout_rates,
             dense_dims=dense_dims,
             dense_activations=dense_activations,
             weights=weights,
             pooling=pooling,
-            scale=scale,
+            version=version,
             dense_kernel_regularizers=dense_kernel_regularizers,
             dense_bias_regularizers=dense_bias_regularizers,
             dense_activity_regularizers=dense_activity_regularizers,
@@ -68,22 +70,22 @@ def main():
         )
 
         if weights_only == 0:
-            model = load_model(_YOYNET_LOAD_PATH)
+            model = load_model(_BUTTERFLYTNET_LOAD_PATH)
         else:
-            model = YoYNet(
+            model = ButterflyNet(
                 input_shape=input_shape,
                 dropout_rates=dropout_rates,
                 dense_dims=dense_dims,
                 dense_activations=dense_activations,
                 weights=weights,
                 pooling=pooling,
-                scale=scale,
+                version=version,
                 dense_kernel_regularizers=dense_kernel_regularizers,
                 dense_bias_regularizers=dense_bias_regularizers,
                 dense_activity_regularizers=dense_activity_regularizers,
                 freeze=freeze
             )
-            model.load_weights(os.path.join(_YOYNET_LOAD_PATH, "variables", "variables"))
+            model.load_weights(os.path.join(_BUTTERFLYTNET_LOAD_PATH, "variables", "variables"))
 
     # Print model summary
     model.summary()
@@ -91,36 +93,35 @@ def main():
     # Set model training parameters
     epochs = 200
 
-    version = 3.7  # For easy saving of multiple model versions
+    version = 3.5  # For easy saving of multiple model versions
 
     if retraining != 0:
-        model_name = f"yoynet_{epochs + _EPOCHS_LOAD}_epochs_v{version}"
+        model_name = f"butterflynet_{epochs + _EPOCHS_LOAD}_epochs_v{version}"
     else:
-        model_name = f"yoynet_{epochs}_epochs_v{version}"
+        model_name = f"butterflynet_{epochs}_epochs_v{version}"
 
     loss = tf.keras.losses.SparseCategoricalCrossentropy(
         from_logits=False,
         name='sparse_categorical_crossentropy'
     )
     optimizer = Adadelta(
-        learning_rate=0.001,
+        learning_rate=1,
         rho=0.95,
         epsilon=1e-07,
         name='adadelta_optimizer'
     )
-    #optimizer = Adam(learning_rate=3e-6)  # was 3e-6
-
+    optimizer = Adam(learning_rate=3e-5)  # was 3e-6
     callbacks = [
         EarlyStopping(
             monitor='val_loss',
             min_delta=0.001,
-            patience=40,
+            patience=30,
             verbose=1,
             mode='auto',
             restore_best_weights=True
         ),
         ModelCheckpoint(
-            filepath=f"{FITTED_YOYNET_DIR}/checkpoint_dir/{model_name}_checkpoint/{model_name}",
+            filepath=f"{FITTED_BUTTERFLYTNET_DIR}/checkpoint_dir/{model_name}_checkpoint/{model_name}",
             save_weights_only=True,
             monitor='val_accuracy',
             mode='max',
@@ -147,11 +148,11 @@ def main():
     )
 
     # Save the model
-    model.save(f'{FITTED_YOYNET_DIR}/{model_name}')
+    model.save(f'{FITTED_BUTTERFLYTNET_DIR}/{model_name}')
     print(f"Model {model_name} saved successfully.")
 
     # Save model summary into file to store architecture
-    with open(f'{FITTED_YOYNET_DIR}/{model_name}.txt', 'w') as fp:
+    with open(f'{FITTED_BUTTERFLYTNET_DIR}/{model_name}.txt', 'w') as fp:
         model.summary(print_fn=lambda x: fp.write(x + '\n'))
 
     # Plot results for loss and validation
