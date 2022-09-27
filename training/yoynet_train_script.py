@@ -14,7 +14,7 @@ from training.constants import FITTED_YOYNET_DIR, PLOT_DIR
 
 
 _EPOCHS_LOAD: final = 200
-_VERSION_LOAD: final = 3.2
+_VERSION_LOAD: final = 3.5
 _YOYNET_LOAD_PATH: final = os.path.join(FITTED_YOYNET_DIR, f"yoynet_{_EPOCHS_LOAD}_epochs_v{_VERSION_LOAD}")
 
 
@@ -40,11 +40,11 @@ def main():
     dense_activations = ['relu', 'relu', 'softmax']
     dropout_rates = [0.5, 0.5]
     weights = 'imagenet'
-    freeze = True
-    scale = 'l'
-    dense_kernel_regularizers = [l1(1e-5), l1(1e-5), None]
-    dense_bias_regularizers = [l1(1e-5), l1(1e-5), None]
-    dense_activity_regularizers = [l1(1e-5), l1(1e-5), l1(1e-5)]
+    freeze = False
+    scale = 'b1'
+    dense_kernel_regularizers = [l2(1e-5), l2(1e-5), None]
+    dense_bias_regularizers = [l2(1e-5), l2(1e-5), None]
+    dense_activity_regularizers = [None, l1(1e-5), l1(1e-5)]
 
     # Instantiate the model and compile it
     retraining = int(input("Insert 0 for training and 1 for retraining: "))
@@ -91,7 +91,7 @@ def main():
     # Set model training parameters
     epochs = 200
 
-    version = 3.2  # For easy saving of multiple model versions
+    version = 3.7  # For easy saving of multiple model versions
 
     if retraining != 0:
         model_name = f"yoynet_{epochs + _EPOCHS_LOAD}_epochs_v{version}"
@@ -103,18 +103,18 @@ def main():
         name='sparse_categorical_crossentropy'
     )
     optimizer = Adadelta(
-        learning_rate=1,
+        learning_rate=0.001,
         rho=0.95,
         epsilon=1e-07,
         name='adadelta_optimizer'
     )
-    # optimizer = Adam(learning_rate=3e-6)
+    #optimizer = Adam(learning_rate=3e-6)  # was 3e-6
 
     callbacks = [
         EarlyStopping(
             monitor='val_loss',
             min_delta=0.001,
-            patience=50,
+            patience=40,
             verbose=1,
             mode='auto',
             restore_best_weights=True

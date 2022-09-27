@@ -1,68 +1,68 @@
 from typing import final
-import numpy as np
+import os
 from matplotlib import pyplot as plt
 import tensorflow as tf
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.optimizers import Adadelta
-from tensorflow.keras.regularizers import l1
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.keras.optimizers import Adadelta, Adam, SGD
+from tensorflow.keras.regularizers import l1, l2, L1L2
 from tensorflow.keras.metrics import SparseCategoricalAccuracy
 from tensorflow.keras.models import load_model
 from models.butterflynet import ButterflyNet
-from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, CHANNELS, TRAIN_PATH_IMAGES_LABELS, \
-    VALIDATION_PATH_IMAGES_LABELS, NORMALIZATION_CONSTANT
-from training.utils import ImageGenerator
+from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, CHANNELS, TRAIN_PATH_CLEANED, VALIDATION_PATH_CLEANED, \
+    CLASS_COUNT, AUTOTUNE
 from training.constants import FITTED_BUTTERFLYTNET_DIR, PLOT_DIR
 
 
-_EPOCHS_LOAD: final = 100
-_PLANT_NET_LOAD_PATH: final = FITTED_BUTTERFLYTNET_DIR + f"/plantnet_{_EPOCHS_LOAD}_epochs_v0.1"
+_EPOCHS_LOAD: final = 200
+_VERSION_LOAD: final = 3.3
+_BUTTERFLYTNET_LOAD_PATH: final = os.path.join(
+    FITTED_BUTTERFLYTNET_DIR, 
+    f"butterflynet_{_EPOCHS_LOAD}_epochs_v{_VERSION_LOAD}")
 
 
 def main():
+    # Define batch size
+    batch_size = 32
+
     # Load the training and validation sets
-    train = np.load(TRAIN_PATH_IMAGES_LABELS)
-    val = np.load(VALIDATION_PATH_IMAGES_LABELS)
-    x_train, y_train = train["images"], train["labels"]
-    x_val, y_val = val["images"], val["labels"]
+    train_ds_prebatch = tf.data.experimental.load(TRAIN_PATH_CLEANED)
+    val_ds_prebatch = tf.data.experimental.load(VALIDATION_PATH_CLEANED)
+
+    # Fetch the batches for the train, evaluation and validation sets to make training faster
+    train_ds_batch = train_ds_prebatch.batch(batch_size)
+    train_ds = train_ds_batch.prefetch(AUTOTUNE)
+
+    val_ds_batch = val_ds_prebatch.batch(batch_size)
+    val_ds = val_ds_batch.prefetch(AUTOTUNE)
 
     # Define model parameters
     input_shape = (None, IMG_HEIGHT, IMG_WIDTH, CHANNELS)
-    filters = [32, 64, 64]
-    kernel_sizes = [(3, 3), (3, 3), (3, 3)]
-    conv_activations = ["relu", "relu", "relu"]
-    conv_strides = [(1, 1), (1, 1), (1, 1)]
-    pool_types = ["MAX", "MAX", "MAX"]
-    pool_sizes = [(2, 2), (2, 2), (2, 2)]
-    pool_strides = [(2, 2), (2, 2), (2, 2)]
-    batch_normalization = [False, False, False]
-    dense_dims = [1024, 64, 10]
-    dense_activations = ['relu', 'relu', 'softmax']
-    dropout_conv = 0.25
-    dropout_dense = 0.6
-    dense_kernel_regularizers = [None, None, None]
-    dense_bias_regularizers = [None, None, None]
-    dense_activity_regularizers = None
+    pooling = "avg"
+    dense_dims = [512, CLASS_COUNT]
+    dense_activations = ['relu', 'softmax']
+    dropout_rates = [0.5]
+    weights = 'imagenet'
+    freeze = False
+    version = 'vgg19'
+    dense_kernel_regularizers = [l2(1e-5), None]
+    dense_bias_regularizers = [l2(1e-5), None]
+    dense_activity_regularizers = [l1(1e-5), l1(1e-5)]
 
     # Instantiate the model and compile it
     retraining = int(input("Insert 0 for training and 1 for retraining: "))
     if retraining == 0:
         model = ButterflyNet(
             input_shape=input_shape,
-            filters=filters,
-            kernel_sizes=kernel_sizes,
-            conv_activations=conv_activations,
-            conv_strides=conv_strides,
-            pool_types=pool_types,
-            pool_sizes=pool_sizes,
-            pool_strides=pool_strides,
-            batch_normalization=batch_normalization,
+            dropout_rates=dropout_rates,
             dense_dims=dense_dims,
             dense_activations=dense_activations,
-            dropout_conv=dropout_conv,
-            dropout_dense=dropout_dense,
+            weights=weights,
+            pooling=pooling,
+            version=version,
             dense_kernel_regularizers=dense_kernel_regularizers,
             dense_bias_regularizers=dense_bias_regularizers,
-            dense_activity_regularizers=dense_activity_regularizers
+            dense_activity_regularizers=dense_activity_regularizers,
+            freeze=freeze
         )
     else:
         weights_only = int(
@@ -70,57 +70,36 @@ def main():
         )
 
         if weights_only == 0:
-            model = load_model(_PLANT_NET_LOAD_PATH, custom_objects={
-                "ButterflyNet": ButterflyNet
-            })
+            model = load_model(_BUTTERFLYTNET_LOAD_PATH)
         else:
             model = ButterflyNet(
                 input_shape=input_shape,
-                filters=filters,
-                kernel_sizes=kernel_sizes,
-                conv_activations=conv_activations,
-                conv_strides=conv_strides,
-                pool_types=pool_types,
-                pool_sizes=pool_sizes,
-                pool_strides=pool_strides,
-                batch_normalization=batch_normalization,
+                dropout_rates=dropout_rates,
                 dense_dims=dense_dims,
                 dense_activations=dense_activations,
-                dropout_conv=dropout_conv,
-                dropout_dense=dropout_dense,
+                weights=weights,
+                pooling=pooling,
+                version=version,
                 dense_kernel_regularizers=dense_kernel_regularizers,
                 dense_bias_regularizers=dense_bias_regularizers,
-                dense_activity_regularizers=dense_activity_regularizers
+                dense_activity_regularizers=dense_activity_regularizers,
+                freeze=freeze
             )
-            model.load_weights(_PLANT_NET_LOAD_PATH + "/" + "variables/variables")
-            model2 = model = ButterflyNet(
-                input_shape=input_shape,
-                filters=filters,
-                kernel_sizes=kernel_sizes,
-                conv_activations=conv_activations,
-                conv_strides=conv_strides,
-                pool_types=pool_types,
-                pool_sizes=pool_sizes,
-                pool_strides=pool_strides,
-                batch_normalization=batch_normalization,
-                dense_dims=dense_dims,
-                dense_activations=dense_activations,
-                dropout_conv=dropout_conv,
-                dropout_dense=dropout_dense,
-                dense_kernel_regularizers=dense_kernel_regularizers,
-                dense_bias_regularizers=dense_bias_regularizers,
-                dense_activity_regularizers=dense_activity_regularizers
-            )
-            model2.set_weights(model.get_weights())
-            del model
-            model = model2
+            model.load_weights(os.path.join(_BUTTERFLYTNET_LOAD_PATH, "variables", "variables"))
 
     # Print model summary
     model.summary()
 
     # Set model training parameters
     epochs = 200
-    batch_size = 50
+
+    version = 3.5  # For easy saving of multiple model versions
+
+    if retraining != 0:
+        model_name = f"butterflynet_{epochs + _EPOCHS_LOAD}_epochs_v{version}"
+    else:
+        model_name = f"butterflynet_{epochs}_epochs_v{version}"
+
     loss = tf.keras.losses.SparseCategoricalCrossentropy(
         from_logits=False,
         name='sparse_categorical_crossentropy'
@@ -131,13 +110,27 @@ def main():
         epsilon=1e-07,
         name='adadelta_optimizer'
     )
+    optimizer = Adam(learning_rate=3e-5)  # was 3e-6
     callbacks = [
-        EarlyStopping(monitor='val_loss', patience=30, min_delta=0.001, restore_best_weights=True)
+        EarlyStopping(
+            monitor='val_loss',
+            min_delta=0.001,
+            patience=30,
+            verbose=1,
+            mode='auto',
+            restore_best_weights=True
+        ),
+        ModelCheckpoint(
+            filepath=f"{FITTED_BUTTERFLYTNET_DIR}/checkpoint_dir/{model_name}_checkpoint/{model_name}",
+            save_weights_only=True,
+            monitor='val_accuracy',
+            mode='max',
+            save_best_only=True
+        )
     ]
     metrics = [
-        SparseCategoricalAccuracy(name='Accuracy')
+        SparseCategoricalAccuracy(name='accuracy')
     ]
-    version = 0.4  # For easy saving of multiple model versions
 
     # Compile the model
     model.compile(
@@ -146,45 +139,35 @@ def main():
         metrics=metrics
     )
 
-    # Instantiate generators
-    train_generator = ImageGenerator(
-        image_filenames=x_train,
-        labels=y_train,
-        batch_size=batch_size,
-        max_normalization=NORMALIZATION_CONSTANT
-    )
-    val_generator = ImageGenerator(
-        image_filenames=x_val,
-        labels=y_val,
-        batch_size=batch_size,
-        max_normalization=NORMALIZATION_CONSTANT
-    )
-
     # Fit the model
     history = model.fit(
-        train_generator,
+        train_ds,
         epochs=epochs,
-        validation_data=val_generator,
+        validation_data=val_ds,
         callbacks=callbacks
     )
 
     # Save the model
-    if retraining != 0:
-        model_name = f"plantnet_{epochs + _EPOCHS_LOAD}_epochs_v{version}"
-    else:
-        model_name = f"plantnet_{epochs}_epochs_v{version}"
     model.save(f'{FITTED_BUTTERFLYTNET_DIR}/{model_name}')
+    print(f"Model {model_name} saved successfully.")
 
     # Save model summary into file to store architecture
     with open(f'{FITTED_BUTTERFLYTNET_DIR}/{model_name}.txt', 'w') as fp:
         model.summary(print_fn=lambda x: fp.write(x + '\n'))
 
-    # Plot results loss
+    # Plot results for loss and validation
     plt.plot(history.history['loss'], label='train')
-    plt.plot(history.history['val_loss'], label='test')
+    plt.plot(history.history['val_loss'], label='validation')
     plt.legend()
-    plt.savefig(f"{PLOT_DIR}/{model_name}.svg")
+    plt.savefig(f"{PLOT_DIR}/{model_name}_loss.svg")
     plt.show()
+
+    plt.plot(history.history['accuracy'], label='train')
+    plt.plot(history.history['val_accuracy'], label='validation')
+    plt.legend()
+    plt.savefig(f"{PLOT_DIR}/{model_name}_accuracy.svg")
+    plt.show()
+    print(f"Training graphs of {model_name} saved successfully.")
 
 
 if __name__ == "__main__":

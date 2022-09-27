@@ -5,22 +5,26 @@ import tensorflow as tf
 from sklearn.metrics import fbeta_score, confusion_matrix, classification_report
 from model_evaluation.constants import EVALUATION_BATCH_SIZE, BETA_SCORE, AVERAGE_TYPE_BETA_SCORE
 from model_evaluation.utils import decode_predictions, plot_confusion_matrix
-from training.constants import FITTED_YOYNET_DIR, PLOT_DIR
+from training.constants import FITTED_YOYNET_DIR, PLOT_DIR, FITTED_BUTTERFLYTNET_DIR
 from preprocessing.constants import EVALUATION_PATH_CLEANED, YUMS, YUCKS, CLASS_NAMES
 from preprocessing.utils import decode_image, decode_label, decode_image_id
 
 
 _VERSION_LOAD: final = 0.2
+_VERSION_LOAD2: final = 3.4
 _EPOCHS_LOAD: final = 100
+_EPOCHS_LOAD2: final = 200
 _MODEL_NAME: final = f"yoynet_{_EPOCHS_LOAD}_epochs_v{_VERSION_LOAD}"
+_MODEL_NAME2: final = f"butterflynet_{_EPOCHS_LOAD2}_epochs_v{_VERSION_LOAD2}"
 _MODEL_PATH: final = os.path.join(FITTED_YOYNET_DIR, _MODEL_NAME)
+_MODEL_PATH2: final = os.path.join(FITTED_BUTTERFLYTNET_DIR, _MODEL_NAME2)
 
 
 def main():
     # Load the dataset and the model
     eval_ds_prebatch = tf.data.experimental.load(EVALUATION_PATH_CLEANED)
     eval_ds = eval_ds_prebatch.batch(EVALUATION_BATCH_SIZE)
-    model = tf.keras.models.load_model(_MODEL_PATH)
+    model = tf.keras.models.load_model(_MODEL_PATH2)
     model.summary()
 
     # Make prediction and format them into a prediction data frame
