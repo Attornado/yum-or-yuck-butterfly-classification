@@ -10,9 +10,9 @@ from preprocessing.constants import EVALUATION_PATH_CLEANED, YUMS, YUCKS, CLASS_
 from preprocessing.utils import decode_image, decode_label, decode_image_id
 
 
-_VERSION_LOAD: final = 0.2
-_VERSION_LOAD2: final = 3.4
-_EPOCHS_LOAD: final = 100
+_VERSION_LOAD: final = 1.7
+_VERSION_LOAD2: final = 3.5
+_EPOCHS_LOAD: final = 200
 _EPOCHS_LOAD2: final = 200
 _MODEL_NAME: final = f"yoynet_{_EPOCHS_LOAD}_epochs_v{_VERSION_LOAD}"
 _MODEL_NAME2: final = f"butterflynet_{_EPOCHS_LOAD2}_epochs_v{_VERSION_LOAD2}"
@@ -24,7 +24,7 @@ def main():
     # Load the dataset and the model
     eval_ds_prebatch = tf.data.experimental.load(EVALUATION_PATH_CLEANED)
     eval_ds = eval_ds_prebatch.batch(EVALUATION_BATCH_SIZE)
-    model = tf.keras.models.load_model(_MODEL_PATH2)
+    model = tf.keras.models.load_model(_MODEL_PATH)
     model.summary()
 
     # Make prediction and format them into a prediction data frame
@@ -88,7 +88,7 @@ def main():
         quad_line_butterfly_cm,
         title="Butterfly Classification",
         cmap='Spectral_r',
-        y_labels=CLASS_NAMES,
+        y_labels=YUMS+YUCKS,
         size=(13, 10),
         quad_line=True,
         savepath=os.path.join(PLOT_DIR, f"{_MODEL_NAME}_confusion_matrix.svg")

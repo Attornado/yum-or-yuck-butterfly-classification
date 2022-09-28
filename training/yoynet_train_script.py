@@ -13,8 +13,8 @@ from preprocessing.constants import IMG_HEIGHT, IMG_WIDTH, CHANNELS, TRAIN_PATH_
 from training.constants import FITTED_YOYNET_DIR, PLOT_DIR
 
 
-_EPOCHS_LOAD: final = 200
-_VERSION_LOAD: final = 3.5
+_EPOCHS_LOAD: final = 400
+_VERSION_LOAD: final = 3.8
 _YOYNET_LOAD_PATH: final = os.path.join(FITTED_YOYNET_DIR, f"yoynet_{_EPOCHS_LOAD}_epochs_v{_VERSION_LOAD}")
 
 
@@ -91,7 +91,7 @@ def main():
     # Set model training parameters
     epochs = 200
 
-    version = 3.7  # For easy saving of multiple model versions
+    version = 3.9  # For easy saving of multiple model versions
 
     if retraining != 0:
         model_name = f"yoynet_{epochs + _EPOCHS_LOAD}_epochs_v{version}"
