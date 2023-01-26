@@ -47,7 +47,7 @@ This neural network-based computer vision project is aimed at classifying six di
 
 ### Results
 
-#### Complete project report (italian language)
+### Complete project report (italian language)
 ![Alt text](/app/assets/readme-imgs/home-alg-options.png?raw=true)
 
 
