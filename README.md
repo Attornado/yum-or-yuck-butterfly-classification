@@ -30,8 +30,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-A simple visual tool allowing to visualize the execution of the Karger's edge-contraction
-algorithm.
+This neural network-based computer vision project is aimed at classifying six different species of butterflies spread in various parts of the planet. The system was developet to participate in a Kaggle challenge, known as [Yum or Yuck Butterfly Mimics 2022](https://www.kaggle.com/competitions/yum-or-yuck-butterfly-mimics-2022). The ultimate goal of the latter is the development of reliable systems for automatic butterfly recognition in order to order to be able to conduct detailed studies on the distribution and populations of these insect species, some of which are considered endangered. The results obtained with some state-of-the-art convolutional systems are encouraging despite the limitations of the available hardware, achieving about 94%/95% accuracy on the test set.
 
 #### Homepage form to set algorithm and graph parameters
 ![Alt text](/app/assets/readme-imgs/home-alg-options.png?raw=true)
