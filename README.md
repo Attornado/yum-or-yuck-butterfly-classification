@@ -77,7 +77,7 @@ This neural network-based computer vision project is aimed at classifying six di
 | 11              | Adam                       | $3 \cdot 10^{-7}$       |
 | 12              | Adam                       | $3 \cdot 10^{-6}$       |
 
-| **\textbf{\#}** | **Precision** | **Recall** | **Accuratezza** | **F1-score** |
+| **\#**          | **Precision**          | **Recall**          | **Accuratezza**          |  **F1-score**         |
 |-----------------|------------------------|---------------------|--------------------------|-----------------------|
 | 1               | 88.30\%                | 88.51\%             | 89.78\%                  | 88.11\%               |
 | 2               | 91.18\%                | 91.28\%             | 91.25\%                  | 91.24\%               |
