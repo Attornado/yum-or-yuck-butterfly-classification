@@ -19,11 +19,11 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="network-architecture">Network architecture</</li>
-        <li><a href="confusion-matrix-(binary)">Confusion matrix (binary)</</li>
-        <li><a href="confusion-matrix-(complete)">Confusion matrix (complete)</</li>
-        <li><a href="results">Results</</li>
-        <li><a href="complete-project-report-(italian-language)">Complete project report (italian language)</</li>
+        <li><a href="#network-architecture">Network architecture</</li>
+        <li><a href="#confusion-matrix-(binary)">Confusion matrix (binary)</</li>
+        <li><a href="#confusion-matrix-(complete)">Confusion matrix (complete)</</li>
+        <li><a href="#results">Results</</li>
+        <li><a href="#complete-project-report-(italian-language)">Complete project report (italian language)</</li>
       </ul>
     </li>
     <li><a href="#technologies">Technologies</a>
