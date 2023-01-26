@@ -52,7 +52,7 @@ This neural network-based computer vision project is aimed at classifying six di
 
 ### Results
 
-| **\#**          | **Sc./Ver.**          | **Freeze pre-trained**          | **Dense dim.**                          | **Regol. Bias**                                  |
+| **\#**          | **Size/Version**          | **Freeze pre-trained weights**          | **Dense dimension**                          | **Bias regularizer**                                  |
 |-----------------|-----------------------|---------------------------------|-----------------------------------------|-----------------------------------------------------------|
 | 1               | B0                    | Sì                              | $\left[512, 128, 6\right]$              | $\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]$              |
 | 2               | B0                    | No                              | $\left[512, 256, 6\right]$              | $\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]$              |
@@ -67,7 +67,7 @@ This neural network-based computer vision project is aimed at classifying six di
 | 11              | VGG16                 | No                              | $\left[512, 256, 6\right]$              | $\left[L_1: 10^{-5},  L_1: 10^{-5}, -\right]$             |
 | 12              | VGG16                 | No                              | $\left[512, 6\right]$                   | $\left[L_2: 10^{-5},-\right]$                             |
 
-| **\#**          | **Regol. Pesi**                                            | **Regol. Attiv.**                                                    |
+| **\#**          | **Weight regularizer**                                    | **Activation regularizer**                                           |
 |-----------------|-----------------------------------------------------------|----------------------------------------------------------------------|
 | 1               | $\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]$              | $\left[-, L_1: 10^{-6}, L_1: 10^{-6}\right]$                         |
 | 2               | $\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]$              | $\left[-, L_1: 10^{-6}, L_1: 10^{-6}\right]$                         |
@@ -82,7 +82,7 @@ This neural network-based computer vision project is aimed at classifying six di
 | 11              | $\left[L_1: 10^{-5}, L_1: 10^{-5}, -\right]$              | $\left[L_1: 10^{-5}, L_1: 10^{-5}, L_1: 10^{-5}\right]$              |
 | 12              | $\left[L_2: 10^{-5}, -\right]$                            | $\left[-, L_1: 10^{-6}\right]$                                       |
 
-| **\#**          | **Ottimizzatore**          | **$\boldsymbol{\eta}$** |
+| **\#**          | **Optimizer**              | **$\boldsymbol{\eta}$** |
 |-----------------|----------------------------|-------------------------|
 | 1               | Adadelta                   | 1                       |
 | 2               | Adadelta                   | 1                       |
@@ -97,7 +97,7 @@ This neural network-based computer vision project is aimed at classifying six di
 | 11              | Adam                       | $3 \cdot 10^{-7}$       |
 | 12              | Adam                       | $3 \cdot 10^{-6}$       |
 
-| **\#**          | **Precision**          | **Recall**          | **Accuratezza**          |  **F1-score**         |
+| **\#**          | **Precision**          | **Recall**          | **Accuracy**             |  **F1-score**         |
 |-----------------|------------------------|---------------------|--------------------------|-----------------------|
 | 1               | 88.30\%                | 88.51\%             | 89.78\%                  | 88.11\%               |
 | 2               | 91.18\%                | 91.28\%             | 91.25\%                  | 91.24\%               |
