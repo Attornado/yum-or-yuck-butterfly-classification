@@ -44,10 +44,10 @@ This neural network-based computer vision project is aimed at classifying six di
 #### YoYNet
 ![alt-text](https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/yoynet.svg?raw=true)
 
-#### Confusion matrix of the best model (binary)
+### Confusion matrix of the best model (binary)
 ![alt-text](https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/confusion_matrix.svg?raw=true)
 
-#### Confusion matrix of the best model (complete)
+### Confusion matrix of the best model (complete)
 ![alt-text](https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/yum_yuck_confusion_matrix.svg?raw=true)
 
 ### Results
