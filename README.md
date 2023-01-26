@@ -18,6 +18,13 @@
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="network-architecture">Network architecture</</li>
+        <li><a href="confusion-matrix-(binary)">Confusion matrix (binary)</</li>
+        <li><a href="confusion-matrix-(complete)">Confusion matrix (complete)</</li>
+        <li><a href="results">Results</</li>
+        <li><a href="complete-project-report-(italian-language)">Complete project report (italian language)</</li>
+      </ul>
     </li>
     <li><a href="#technologies">Technologies</a>
     <li><a href="#license">License</a></li>
@@ -32,31 +39,17 @@
 
 This neural network-based computer vision project is aimed at classifying six different species of butterflies spread in various parts of the planet. The system was developet to participate in a Kaggle challenge, known as [Yum or Yuck Butterfly Mimics 2022](https://www.kaggle.com/competitions/yum-or-yuck-butterfly-mimics-2022). The ultimate goal of the latter is the development of reliable systems for automatic butterfly recognition in order to order to be able to conduct detailed studies on the distribution and populations of these insect species, some of which are considered endangered. The results obtained with some state-of-the-art convolutional systems are encouraging despite the limitations of the available hardware, achieving about 94%/95% accuracy on the test set.
 
-#### Homepage form to set algorithm and graph parameters
+### Network architecture
+
+### Confusion matrix (binary)
+
+### Confusion matrix (complete)
+
+### Results
+
+#### Complete project report (italian language)
 ![Alt text](/app/assets/readme-imgs/home-alg-options.png?raw=true)
 
-#### Random graph generation
-![Alt text](/app/assets/readme-imgs/random-gen.png?raw=true)
-
-#### Edge-contraction steps
-![Alt text](/app/assets/readme-imgs/step0.png?raw=true)
-
-![Alt text](/app/assets/readme-imgs/step1.png?raw=true)
-
-![Alt text](/app/assets/readme-imgs/step2.png?raw=true)
-
-![Alt text](/app/assets/readme-imgs/step3.png?raw=true)
-
-#### Cut found by the edge-contraction algorithm
-![Alt text](/app/assets/readme-imgs/final-cut.png?raw=true)
-
-#### Optimal cut
-![Alt text](/app/assets/readme-imgs/optimal-cut.png?raw=true)
-
-#### Cut comparison table and metrics
-![Alt text](/app/assets/readme-imgs/comparison-table.png?raw=true)
-
-![Alt text](/app/assets/readme-imgs/metrics.png?raw=true)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
