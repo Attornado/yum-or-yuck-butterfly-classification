@@ -47,7 +47,7 @@ This neural network-based computer vision project is aimed at classifying six di
 
 ### Results
 
-| **\textbf{\#}** | **\textbf{Sc./Ver.}** | **\textbf{Freeze pre-trained}** | **\textbf{Dense dim.}**                 | **\textbf{Regol. Bias}**                                  |
+| **\#**          | **Sc./Ver.**          | **Freeze pre-trained**          | **Dense dim.**                          | **Regol. Bias**                                  |
 |-----------------|-----------------------|---------------------------------|-----------------------------------------|-----------------------------------------------------------|
 | 1               | B0                    | Sì                              | $\left[512, 128, 6\right]$              | $\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]$              |
 | 2               | B0                    | No                              | $\left[512, 256, 6\right]$              | $\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]$              |
@@ -55,14 +55,29 @@ This neural network-based computer vision project is aimed at classifying six di
 | 4               | B1                    | No                              | $\left[512, 256, 6\right]$              | $\left[L_2: 10^{-5}, L_2: 10^{-5}, -\right]$              |
 | 5               | B1                    | No                              | $\left[512, 6\right]$                   | $\left[ -, -\right]$                                      |
 | 6               | B1                    | No                              | $\left[512, 512, 6\right]$              | $\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]$              |
-| \textbf{7}      | \textbf{B1}           | \textbf{No}                     | $\boldsymbol{\left[512, 256, 6\right]}$ | $\boldsymbol{\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]}$ |
+| **7**      | **B1**           | **No**                     | $\boldsymbol{\left[512, 256, 6\right]}$ | $\boldsymbol{\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]}$ |
 | 8               | B1                    | No                              | $\left[512, 512, 6\right]$              | $\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]$              |
 | 9               | VGG19                 | No                              | $\left[512, 6\right]$                   | $\left[-, -\right]$                                       |
 | 10              | VGG19                 | No                              | $\left[512, 256, 6\right]$              | $\left[ L_1: 10^{-6},  L_1: 10^{-6}, -\right]$            |
 | 11              | VGG16                 | No                              | $\left[512, 256, 6\right]$              | $\left[L_1: 10^{-5},  L_1: 10^{-5}, -\right]$             |
 | 12              | VGG16                 | No                              | $\left[512, 6\right]$                   | $\left[L_2: 10^{-5},-\right]$                             |
 
-| **\textbf{\#}** | **\textbf{Ottimizzatore}** | **$\boldsymbol{\eta}$** |
+| **\#**          | **Regol. Pesi**                                            | **Regol. Attiv.**                                                    |
+|-----------------|-----------------------------------------------------------|----------------------------------------------------------------------|
+| 1               | $\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]$              | $\left[-, L_1: 10^{-6}, L_1: 10^{-6}\right]$                         |
+| 2               | $\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]$              | $\left[-, L_1: 10^{-6}, L_1: 10^{-6}\right]$                         |
+| 3               | $\left[L_1: 10^{-6}, -\right]$                            | $\left[-, L_1: 10^{-6}\right]$                                       |
+| 4               | $\left[L_2: 10^{-5}, L_2: 10^{-5}, -\right]$              | $\left[L_1: 10^{-6}, L_1: 10^{-6}, L_1: 10^{-6}\right]$              |
+| 5               | $\left[L_1: 10^{-6}, -\right]$                            | $\left[-, -\right]$                                                  |
+| 6               | $\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]$              | $\left[L_1: 10^{-6}, L_1: 10^{-6}, L_1: 10^{-6}\right]$              |
+| **7**           | $\boldsymbol{\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]}$ | $\boldsymbol{\left[L_1: 10^{-6}, L_1: 10^{-6}, L_1: 10^{-6}\right]}$ |
+| 8               | $\left[L_1: 10^{-5}, L_1: 10^{-6}, -\right]$              | $\left[L_1: 10^{-6}, L_1: 10^{-6}, L_1: 10^{-6}\right]$              |
+| 9               | $\left[-, -\right]$                                       | $\left[-, -\right]$                                                  |
+| 10              | $\left[L_1: 10^{-6}, L_1: 10^{-6}, -\right]$              | $\left[L_1: 10^{-6}, L_1: 10^{-6},                                   |
+| 11              | $\left[L_1: 10^{-5}, L_1: 10^{-5}, -\right]$              | $\left[L_1: 10^{-5}, L_1: 10^{-5}, L_1: 10^{-5}\right]$              |
+| 12              | $\left[L_2: 10^{-5}, -\right]$                            | $\left[-, L_1: 10^{-6}\right]$                                       |
+
+| **\#**          | **Ottimizzatore**          | **$\boldsymbol{\eta}$** |
 |-----------------|----------------------------|-------------------------|
 | 1               | Adadelta                   | 1                       |
 | 2               | Adadelta                   | 1                       |
@@ -70,7 +85,7 @@ This neural network-based computer vision project is aimed at classifying six di
 | 4               | Adam                       | $3 \cdot 10^{-7}$       |
 | 5               | Adadelta                   | 1                       |
 | 6               | Adadelta                   | 1                       |
-| \textbf{7}      | \textbf{Adadelta}          | \textbf{1}              |
+| **7**           | **Adadelta**               | **1**                   |
 | 8               | Adadelta, Adam             | 1, $3 \cdot 10^{-7}$    |
 | 9               | Adam                       | $3 \cdot 10^{-7}$       |
 | 10              | Adam                       | $3 \cdot 10^{-7}$       |
