@@ -114,7 +114,7 @@ This neural network-based computer vision project is aimed at classifying six di
 
 
 ### Complete project report (italian language)
-![Alt text](/app/assets/readme-imgs/home-alg-options.png?raw=true)
+[Link](https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/yum-or-yuck-docs.pdf)
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
