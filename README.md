@@ -219,5 +219,5 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 [Plotly-url]: https://plotly.com/
 [Keras]: https://img.shields.io/badge/Keras-222222?style=for-the-badge&logo=keras&logoColor=E01F27      
 [Keras-url]: https://keras.io/
-[TensofFlow]: https://img.shields.io/badge/TensofFlow-333333?style=for-the-badge&logo=tensorflow&logoColor=orange
+[TensorFlow]: https://img.shields.io/badge/TensofFlow-333333?style=for-the-badge&logo=tensorflow&logoColor=orange
 [TensorFlow-url]: https://www.tensorflow.org/?hl=en
