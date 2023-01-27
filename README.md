@@ -127,7 +127,7 @@ This neural network-based computer vision project is aimed at classifying six di
 ## Technologies
 
 #### Data & graph processing management
-* [![NetworkX]][NetworkX-url]
+* [![Keras]][Keras-url]
 * [![Pandas]][Pandas-url]
 * [![Numpy]][Numpy-url]
 
@@ -224,3 +224,7 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 [NetworkX-url]: https://networkx.org/documentation/stable/index.html
 [Plotly]: https://img.shields.io/badge/Plotly-100000?style=for-the-badge&logo=plotly&logoColor=white&labelColor=660169&color=660169
 [Plotly-url]: https://plotly.com/
+[Keras]: https://img.shields.io/badge/Keras-222222?style=for-the-badge&logo=keras&logoColor=E01F27      
+[Keras-url]: https://keras.io/
+[TensofFlow]: https://img.shields.io/badge/TensofFlow-333333?style=for-the-badge&logo=tensorflow&logoColor=orange
+[TensorFlow-url]: https://www.tensorflow.org/?hl=en
