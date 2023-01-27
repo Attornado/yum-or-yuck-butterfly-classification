@@ -42,7 +42,7 @@ This neural network-based computer vision project is aimed at classifying six di
 ### Network architecture
           
 #### YoYNet
-![alt-text](https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/yoynet.svg?raw=true)
+![alt-text](https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/yoynet2.svg?raw=true)
 
 #### ButterflyNet
 ![alt-text](https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/butterflynet.svg?raw=true)
