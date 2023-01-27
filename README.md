@@ -134,6 +134,7 @@ This neural network-based computer vision project is aimed at classifying six di
 * [![Pandas]][Pandas-url]
 * [![Numpy]][Numpy-url]
 * [![SK-learn]][SK-learn-url]
+* [![OpenCV]][OpenCV-url]
 
 #### Data visualization
 * [![Matplotlib]][Matplotlib-url]
@@ -224,3 +225,5 @@ Distributed under the Apache License 2.0 License. See `LICENSE` for more informa
 [TensorFlow-url]: https://www.tensorflow.org/?hl=en
 [SK-learn]: https://img.shields.io/badge/Scikit--Learn-04356d?style=for-the-badge&logo=scikitlearn&logoColor=f5bf42
 [SK-learn-url]: https://scikit-learn.org/stable/
+[OpenCV]: https://img.shields.io/badge/OpenCV-444444?style=for-the-badge&logo=opencv&logoColor=green
+[OpenCV-url]: https://opencv.org/
