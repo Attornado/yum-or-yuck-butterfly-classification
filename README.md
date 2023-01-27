@@ -126,23 +126,16 @@ This neural network-based computer vision project is aimed at classifying six di
 
 ## Technologies
 
-#### Data & graph processing management
+#### Deep learning models
 * [![Keras]][Keras-url]
+* [![TensorFlow]][TensorFlow-url]
+          
+#### Preprocessing and data management
 * [![Pandas]][Pandas-url]
 * [![Numpy]][Numpy-url]
 
 #### Data visualization
-* [![Plotly]][Plotly-url]
-
-#### Server-side
-* [![Dash]][Dash-url]
-* [![Flask]][Flask-url]
-
-#### Front-end
-* [![Dash]][Dash-url]
-* [![React.js]][React-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
+* [![Matplotlib]][Matplotlib-url]
 
 
 <!-- LICENSE -->
