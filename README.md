@@ -49,7 +49,7 @@ This neural network-based computer vision project is aimed at classifying six di
 ![alt-text](https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/confusion_matrix.svg?raw=true)
 
 ### Confusion matrix of the best model (complete)
-![alt-text](https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/yum_yuck_confusion_matrix.svg?raw=true)
+![alt-text](https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/yum_yuck_confusion_matri.svg?raw=true)
 
 ### Results
 
