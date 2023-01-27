@@ -42,13 +42,7 @@ This neural network-based computer vision project is aimed at classifying six di
 ### Network architecture
           
 #### YoYNet
-<!-- ![alt-text](https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/yoynet.svg?raw=true)-->
-
-<object data="https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/yoynet.pdf?raw=true" type="application/pdf" width="700px" height="700px">
-    <embed src="https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/yoynet.pdf?raw=true">
-        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="http://yoursite.com/the.pdf">Download PDF</a>.</p>
-    </embed>
-</object>
+![alt-text](https://github.com/Attornado/yum-or-yuck-butterfly-classification/blob/main/readme-imgs/yoynet.svg?raw=true)
 
 
 ### Confusion matrix of the best model (binary)
